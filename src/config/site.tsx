@@ -1,26 +1,59 @@
-import { Gauge, type LucideIcon, MessagesSquare } from "lucide-react";
+import {
+  BookOpen,
+  Briefcase,
+  LayoutDashboard,
+  type LucideIcon,
+  Sparkles,
+  Telescope,
+} from "lucide-react";
 
 export type SiteConfig = typeof siteConfig;
 export type Navigation = {
   icon: LucideIcon;
   name: string;
   href: string;
+  description?: string;
 };
 
 export const siteConfig = {
-  title: "VisActor Next Template",
-  description: "Template for VisActor and Next.js",
+  title: "ASCEND — LADDER Sales OS",
+  description:
+    "The operating system for roofing sales teams running the LADDER framework.",
+  brand: {
+    name: "ASCEND",
+    tagline: "LADDER Sales OS",
+  },
 };
 
 export const navigations: Navigation[] = [
   {
-    icon: Gauge,
-    name: "Dashboard",
+    icon: LayoutDashboard,
+    name: "Command Center",
     href: "/",
+    description: "KPIs, funnel, and today's priorities",
   },
   {
-    icon: MessagesSquare,
-    name: "Ticket",
-    href: "/ticket",
+    icon: Telescope,
+    name: "Research",
+    href: "/research",
+    description: "Pre-call intelligence in 60 seconds",
+  },
+  {
+    icon: Briefcase,
+    name: "Deals",
+    href: "/deals",
+    description: "Pipeline with health scoring",
+  },
+  {
+    icon: Sparkles,
+    name: "Agent",
+    href: "/agent",
+    description: "Your AI sales coach",
+  },
+  {
+    icon: BookOpen,
+    name: "Playbook",
+    href: "/playbook",
+    description: "Objection handling library",
   },
 ];
