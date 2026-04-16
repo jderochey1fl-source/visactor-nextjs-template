@@ -1,12 +1,11 @@
 "use client";
 
+import { AlertTriangle, Clock, DollarSign, Flame, MapPin } from "lucide-react";
 import { useMemo, useState } from "react";
-import { AlertTriangle, Building2, Clock, DollarSign } from "lucide-react";
+import { ladderStages, stageByKey } from "@/data/ladder";
 import { deals } from "@/data/deals";
-import { ladderStages } from "@/data/ladder";
-import type { Deal, LadderStageId } from "@/types/types";
+import type { Deal, LadderStage } from "@/types/types";
 import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { DealDrawer } from "./deal-drawer";
 
@@ -19,50 +18,85 @@ const currency = (n: number) =>
 
 export function PipelineBoard() {
   const [selected, setSelected] = useState<Deal | null>(null);
+  const [filter, setFilter] = useState<"all" | "hot" | "drift" | "mine">("all");
+
+  const filteredDeals = useMemo(() => {
+    switch (filter) {
+      case "hot":
+        return deals.filter((d) => d.health >= 70);
+      case "drift":
+        return deals.filter((d) => d.daysInStage >= 10 || d.health < 50);
+      case "mine":
+        return deals.filter((d) => d.owner === "J. Reyes");
+      default:
+        return deals;
+    }
+  }, [filter]);
 
   const byStage = useMemo(() => {
-    const map = new Map<LadderStageId, Deal[]>();
-    for (const stage of ladderStages) map.set(stage.id, []);
-    for (const d of deals) map.get(d.stage)?.push(d);
+    const map = new Map<LadderStage, Deal[]>();
+    for (const s of ladderStages) map.set(s.key, []);
+    for (const d of filteredDeals) map.get(d.stage)?.push(d);
     return map;
-  }, []);
+  }, [filteredDeals]);
+
+  const totalValue = filteredDeals.reduce((s, d) => s + d.value, 0);
 
   return (
     <>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
-        {ladderStages.map((stage) => {
-          const stageDeals = byStage.get(stage.id) ?? [];
+      <div className="mb-5 flex flex-col gap-4 tablet:flex-row tablet:items-center tablet:justify-between">
+        <div className="flex flex-wrap gap-2">
+          <FilterChip label="All" count={deals.length} active={filter === "all"} onClick={() => setFilter("all")} />
+          <FilterChip label="Hot (health ≥ 70)" active={filter === "hot"} onClick={() => setFilter("hot")} />
+          <FilterChip label="Drift risk" active={filter === "drift"} onClick={() => setFilter("drift")} />
+          <FilterChip label="Mine" active={filter === "mine"} onClick={() => setFilter("mine")} />
+        </div>
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <span className="font-mono uppercase tracking-wider">Total</span>
+          <span className="font-mono text-sm font-semibold text-foreground">
+            {currency(totalValue)}
+          </span>
+          <span className="text-border">·</span>
+          <span className="font-mono">{filteredDeals.length} deals</span>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 tablet:grid-cols-2 laptop:grid-cols-3 desktop:grid-cols-6">
+        {ladderStages.map((stage, idx) => {
+          const stageDeals = byStage.get(stage.key) ?? [];
           const total = stageDeals.reduce((s, d) => s + d.value, 0);
           return (
-            <div key={stage.id} className="flex min-w-0 flex-col gap-3">
-              <div className="flex items-center justify-between gap-2">
-                <div className="flex min-w-0 items-center gap-2">
-                  <span className="flex h-6 w-6 flex-none items-center justify-center rounded bg-accent/15 font-mono text-xs font-semibold text-accent">
-                    {stage.letter}
-                  </span>
-                  <h3 className="truncate text-sm font-semibold text-foreground">
-                    {stage.title}
-                  </h3>
+            <div key={stage.key} className="flex min-w-0 flex-col gap-3">
+              <div className="flex flex-col gap-1 border-b border-border pb-3">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex min-w-0 items-center gap-2">
+                    <span
+                      className={cn(
+                        "flex h-6 w-6 shrink-0 items-center justify-center rounded font-mono text-xs font-bold text-primary-foreground",
+                        accentByIndex[idx] ?? "bg-primary",
+                      )}
+                    >
+                      {stage.letter}
+                    </span>
+                    <h3 className="truncate text-sm font-semibold">{stage.name}</h3>
+                  </div>
+                  <Badge variant="muted" className="font-mono">
+                    {stageDeals.length}
+                  </Badge>
                 </div>
-                <Badge variant="outline" className="font-mono text-xs">
-                  {stageDeals.length}
-                </Badge>
+                <p className="font-mono text-[11px] text-muted-foreground">
+                  {currency(total)}
+                </p>
               </div>
-              <p className="font-mono text-xs text-muted-foreground">
-                {currency(total)} total
-              </p>
-              <div className="flex flex-col gap-3">
+
+              <div className="flex flex-col gap-2">
                 {stageDeals.length === 0 ? (
-                  <Card className="flex items-center justify-center border-dashed bg-muted/30 p-4 text-xs text-muted-foreground">
-                    No deals in stage
-                  </Card>
+                  <div className="flex items-center justify-center rounded-md border border-dashed border-border bg-muted/20 p-5 text-xs text-muted-foreground">
+                    No deals
+                  </div>
                 ) : (
-                  stageDeals.map((deal) => (
-                    <DealCard
-                      key={deal.id}
-                      deal={deal}
-                      onClick={() => setSelected(deal)}
-                    />
+                  stageDeals.map((d) => (
+                    <DealCard key={d.id} deal={d} onClick={() => setSelected(d)} />
                   ))
                 )}
               </div>
@@ -70,6 +104,7 @@ export function PipelineBoard() {
           );
         })}
       </div>
+
       <DealDrawer
         deal={selected}
         open={!!selected}
@@ -79,62 +114,107 @@ export function PipelineBoard() {
   );
 }
 
+const accentByIndex = [
+  "bg-primary",
+  "bg-primary/90",
+  "bg-primary/80",
+  "bg-hot/80",
+  "bg-hot/90",
+  "bg-success",
+];
+
 function DealCard({ deal, onClick }: { deal: Deal; onClick: () => void }) {
-  const temp =
-    deal.temperature === "hot"
-      ? "bg-accent/15 text-accent"
-      : deal.temperature === "warm"
-        ? "bg-primary/10 text-primary"
-        : "bg-muted text-muted-foreground";
+  const healthTone =
+    deal.health >= 70
+      ? "bg-success/10 text-success"
+      : deal.health >= 45
+        ? "bg-warning/15 text-warning"
+        : "bg-destructive/10 text-destructive";
+  const drift = deal.daysInStage >= 10;
+  const stage = stageByKey[deal.stage];
 
   return (
     <button
       type="button"
       onClick={onClick}
-      className={cn(
-        "flex flex-col gap-3 rounded-lg border border-border bg-card p-4 text-left transition hover:border-primary/40 hover:shadow-sm",
-      )}
+      className="group flex flex-col gap-3 rounded-md border border-border bg-card p-3 text-left transition-colors hover:border-primary/40 hover:bg-muted/20"
     >
       <div className="flex items-start justify-between gap-2">
-        <div className="flex min-w-0 flex-col gap-1">
-          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <Building2 className="h-3 w-3 flex-none" />
-            <span className="truncate">{deal.company}</span>
-          </div>
-          <p className="truncate text-sm font-semibold text-foreground">
-            {deal.contact}
-          </p>
-          <p className="truncate text-xs text-muted-foreground">
-            {deal.title}
-          </p>
+        <div className="flex min-w-0 flex-col">
+          <span className="truncate text-sm font-semibold">
+            {deal.prospect.name}
+          </span>
+          <span className="flex items-center gap-1 truncate text-[11px] text-muted-foreground">
+            <MapPin className="h-2.5 w-2.5 shrink-0" />
+            {deal.prospect.city}, {deal.prospect.state}
+          </span>
         </div>
         <span
           className={cn(
-            "flex-none rounded-full px-2 py-0.5 font-mono text-[10px] uppercase tracking-wide",
-            temp,
+            "shrink-0 rounded px-1.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider",
+            healthTone,
           )}
         >
-          {deal.temperature}
+          {deal.health}
         </span>
       </div>
 
-      <div className="flex items-center justify-between gap-2 border-t border-border pt-3">
-        <div className="flex items-center gap-1.5 text-xs text-foreground">
+      <div className="flex items-center justify-between gap-2 text-xs">
+        <div className="flex items-center gap-1 text-foreground">
           <DollarSign className="h-3 w-3 text-muted-foreground" />
           <span className="font-mono font-medium">{currency(deal.value)}</span>
         </div>
-        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-          <Clock className="h-3 w-3" />
-          <span className="font-mono">{deal.daysInStage}d</span>
+        <div
+          className={cn(
+            "flex items-center gap-1 font-mono",
+            drift ? "text-hot" : "text-muted-foreground",
+          )}
+          title={`Days in ${stage.name}`}
+        >
+          {drift ? <Flame className="h-3 w-3" /> : <Clock className="h-3 w-3" />}
+          {deal.daysInStage}d
         </div>
       </div>
 
-      {deal.blockers.length > 0 && (
-        <div className="flex items-start gap-1.5 rounded-md bg-destructive/10 p-2 text-xs text-destructive">
-          <AlertTriangle className="mt-0.5 h-3 w-3 flex-none" />
-          <span className="line-clamp-2">{deal.blockers[0]}</span>
-        </div>
+      <div className="flex items-start gap-1.5 rounded-sm bg-muted/40 p-2 text-[11px]">
+        <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
+        <span className="line-clamp-2 text-foreground/90">{deal.nextAction}</span>
+      </div>
+
+      <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+        <span>{deal.owner}</span>
+        <span>{deal.id}</span>
+      </div>
+    </button>
+  );
+}
+
+function FilterChip({
+  label,
+  count,
+  active,
+  onClick,
+}: {
+  label: string;
+  count?: number;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+        active
+          ? "border-primary bg-primary text-primary-foreground"
+          : "border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground",
       )}
+    >
+      {label}
+      {count !== undefined ? (
+        <span className="ml-1.5 font-mono text-[10px] opacity-80">{count}</span>
+      ) : null}
     </button>
   );
 }

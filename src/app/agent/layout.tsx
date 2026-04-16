@@ -1,12 +1,5 @@
-import type { Metadata } from "next";
-import SideNav from "@/components/nav/side-nav";
-import TopNav from "@/components/nav/top-nav";
-
-export const metadata: Metadata = {
-  title: "Agent — ASCEND",
-  description:
-    "Claude-powered sales coach trained on LADDER, ICP, and objection playbook.",
-};
+import { TopNav } from "@/components/nav";
+import { Badge } from "@/components/ui/badge";
 
 export default function AgentLayout({
   children,
@@ -14,12 +7,20 @@ export default function AgentLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-background">
-      <SideNav />
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <TopNav />
-        <main className="flex-1 overflow-hidden">{children}</main>
-      </div>
-    </div>
+    <>
+      <TopNav
+        title="Agent"
+        subtitle="Claude sales coach · trained on LADDER + roofing ops"
+        action={
+          <Badge variant="default" className="gap-1.5 px-2 py-1">
+            <span className="inline-flex h-1.5 w-1.5 animate-pulse-dot rounded-full bg-primary" />
+            <span className="font-mono text-[10px] uppercase tracking-wider">
+              Claude Opus 4.6
+            </span>
+          </Badge>
+        }
+      />
+      <main className="h-[calc(100dvh-4rem)]">{children}</main>
+    </>
   );
 }

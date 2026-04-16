@@ -1,30 +1,29 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type UIMessage } from "ai";
 import { ArrowUp, Bot, Sparkles, User } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
-const suggestedPrompts = [
+const suggestedPrompts: { label: string; text: string }[] = [
   {
-    label: "Diagnose stuck deal",
-    text: "One of my deals has been in Discover for 12 days. The contact keeps saying &apos;let me think about it&apos;. What should I do?",
+    label: "Stuck deal",
+    text: "Deal has been in Diagnose for 11 days. HOA board, we're bid 1 of 3, they keep 'thinking about it'. What's my next move?",
   },
   {
-    label: "Handle price objection",
-    text: "Prospect says $249/mo is too expensive compared to just using their bookkeeper. How do I respond?",
+    label: "Price objection",
+    text: "Prospect says: 'Your guy down the street is $4k less.' Apples-to-apples scope, but I want the script and the closing move.",
   },
   {
-    label: "Ascend pitch",
-    text: "Give me a 60-second pitch for Ascend Cashflow tailored to a 3-truck owner-operator.",
+    label: "Gone dark",
+    text: "Design-stage deal. Was hot last week. Wife asked for time. Two touches since, no response. How do I re-open without burning the referral?",
   },
   {
-    label: "Discovery questions",
-    text: "What are the 5 best Discover-stage questions for a trucking owner-operator?",
+    label: "Insurance supplement",
+    text: "Adjuster missed valley ice & water and two pipe flashings. Walk me through building the supplement packet and the on-site re-inspection.",
   },
 ];
 
@@ -53,65 +52,43 @@ export function AgentChat() {
 
   const isStreaming = status === "streaming" || status === "submitted";
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const submit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isStreaming) return;
     sendMessage({ text: input });
     setInput("");
   };
 
-  const handleSuggestion = (text: string) => {
+  const pick = (text: string) => {
     if (isStreaming) return;
     sendMessage({ text });
   };
 
   return (
-    <div className="flex h-full flex-col">
-      <header className="flex items-center justify-between border-b border-border bg-card px-6 py-4">
-        <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent/15 text-accent">
-            <Sparkles className="h-4 w-4" />
-          </div>
-          <div>
-            <h1 className="font-serif text-lg font-semibold tracking-tight text-foreground">
-              Sales Coach
-            </h1>
-            <p className="text-xs text-muted-foreground">
-              Claude Opus · Trained on LADDER, Ascend Cashflow, trucking ICP
-            </p>
-          </div>
-        </div>
-        <Badge variant="outline" className="font-mono text-xs">
-          {messages.length} messages
-        </Badge>
-      </header>
-
-      <div
-        ref={scrollRef}
-        className="flex-1 overflow-y-auto bg-background px-6 py-6"
-      >
+    <div className="flex h-full flex-col bg-background">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto">
         {messages.length === 0 ? (
-          <EmptyState onPick={handleSuggestion} />
+          <EmptyState onPick={pick} />
         ) : (
-          <div className="mx-auto flex max-w-3xl flex-col gap-6">
+          <div className="mx-auto flex max-w-3xl flex-col gap-6 px-6 py-8">
             {messages.map((m) => (
               <Message key={m.id} message={m} />
             ))}
             {isStreaming &&
-              messages[messages.length - 1]?.role === "user" && (
-                <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/15 text-accent">
-                    <Bot className="h-4 w-4" />
-                  </div>
-                  <TypingDots />
+            messages[messages.length - 1]?.role === "user" ? (
+              <div className="flex items-center gap-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary/10 text-primary">
+                  <Bot className="h-4 w-4" />
                 </div>
-              )}
+                <TypingDots />
+              </div>
+            ) : null}
           </div>
         )}
       </div>
 
       <form
-        onSubmit={handleSubmit}
+        onSubmit={submit}
         className="border-t border-border bg-card px-6 py-4"
       >
         <div className="mx-auto flex max-w-3xl items-end gap-2">
@@ -121,10 +98,10 @@ export function AgentChat() {
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
-                handleSubmit(e);
+                submit(e);
               }
             }}
-            placeholder="Ask about a stuck deal, an objection, a pitch…"
+            placeholder="Ask about a stuck deal, objection, or pitch..."
             rows={2}
             className="resize-none"
             disabled={isStreaming}
@@ -138,6 +115,9 @@ export function AgentChat() {
             <ArrowUp className="h-4 w-4" />
           </Button>
         </div>
+        <p className="mx-auto mt-2 max-w-3xl text-center font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+          Enter to send · Shift + Enter for newline
+        </p>
       </form>
     </div>
   );
@@ -145,30 +125,33 @@ export function AgentChat() {
 
 function EmptyState({ onPick }: { onPick: (t: string) => void }) {
   return (
-    <div className="mx-auto flex max-w-2xl flex-col items-center justify-center gap-6 py-12 text-center">
-      <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-accent/15 text-accent">
+    <div className="mx-auto flex h-full max-w-2xl flex-col items-center justify-center gap-6 px-6 py-12 text-center">
+      <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 text-primary">
         <Sparkles className="h-6 w-6" />
       </div>
       <div className="flex flex-col gap-2">
-        <h2 className="font-serif text-2xl font-semibold tracking-tight text-foreground">
+        <h2 className="text-2xl font-semibold tracking-tight">
           How can I help you close this deal?
         </h2>
         <p className="text-sm text-muted-foreground">
-          I know LADDER, Ascend Cashflow, and every owner-operator objection.
-          Ask me anything.
+          I coach on LADDER. I know roofing, insurance claims, and every
+          objection you&apos;ll hear tonight. Give me the deal — I&apos;ll give
+          you the move.
         </p>
       </div>
-      <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-2">
+      <div className="grid w-full grid-cols-1 gap-2 tablet:grid-cols-2">
         {suggestedPrompts.map((p) => (
           <button
             key={p.label}
             type="button"
             onClick={() => onPick(p.text)}
-            className="flex flex-col gap-1 rounded-lg border border-border bg-card p-4 text-left text-sm transition hover:border-primary/40 hover:bg-muted/50"
+            className="flex flex-col gap-1 rounded-md border border-border bg-card p-3 text-left transition-colors hover:border-primary/40 hover:bg-muted/40"
           >
-            <span className="font-medium text-foreground">{p.label}</span>
+            <span className="font-mono text-[10px] font-medium uppercase tracking-wider text-primary">
+              {p.label}
+            </span>
             <span className="line-clamp-2 text-xs text-muted-foreground">
-              {p.text.replace("&apos;", "'")}
+              {p.text}
             </span>
           </button>
         ))}
@@ -189,23 +172,23 @@ function Message({ message }: { message: UIMessage }) {
     >
       <div
         className={cn(
-          "flex h-8 w-8 flex-none items-center justify-center rounded-lg",
+          "flex h-8 w-8 shrink-0 items-center justify-center rounded-md",
           isUser
             ? "bg-primary text-primary-foreground"
-            : "bg-accent/15 text-accent",
+            : "bg-primary/10 text-primary",
         )}
       >
         {isUser ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
       </div>
       <div
         className={cn(
-          "max-w-[85%] rounded-lg px-4 py-3 text-sm leading-relaxed",
+          "max-w-[85%] whitespace-pre-wrap rounded-md px-4 py-3 text-sm leading-relaxed",
           isUser
             ? "bg-primary text-primary-foreground"
-            : "bg-card text-foreground border border-border",
+            : "border border-border bg-card text-foreground",
         )}
       >
-        <pre className="whitespace-pre-wrap font-sans">{text}</pre>
+        {text}
       </div>
     </div>
   );

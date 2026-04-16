@@ -1,11 +1,6 @@
-import type { Metadata } from "next";
-import SideNav from "@/components/nav/side-nav";
-import TopNav from "@/components/nav/top-nav";
-
-export const metadata: Metadata = {
-  title: "Playbook — ASCEND",
-  description: "Objection handling and LADDER stage scripts.",
-};
+import { TopNav } from "@/components/nav";
+import { Badge } from "@/components/ui/badge";
+import { objections } from "@/data/objections";
 
 export default function PlaybookLayout({
   children,
@@ -13,12 +8,17 @@ export default function PlaybookLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-background">
-      <SideNav />
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <TopNav />
-        <main className="flex-1 overflow-y-auto">{children}</main>
-      </div>
-    </div>
+    <>
+      <TopNav
+        title="Playbook"
+        subtitle="Objection scripts · LADDER stage checklists · closing moves"
+        action={
+          <Badge variant="outline" className="font-mono text-xs">
+            {objections.length} scripts
+          </Badge>
+        }
+      />
+      <main>{children}</main>
+    </>
   );
 }
