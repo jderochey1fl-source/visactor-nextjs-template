@@ -1,13 +1,27 @@
 "use client";
 
-import { Check, Copy, Info } from "lucide-react";
+import {
+  Calculator,
+  Check,
+  Copy,
+  Info,
+  PencilLine,
+  Plus,
+  Trash2,
+} from "lucide-react";
 import { useMemo, useState } from "react";
+import { RoiAttachmentEditor } from "@/components/objection-lab/roi-attachment";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { leverByKey, REBUTTAL_LEVERS } from "@/data/rebuttal-levers";
+import { formatMoney, roiLabel } from "@/lib/ladder-roi";
 import { cn } from "@/lib/utils";
-import type { RebuttalLeverKey, RebuttalOption } from "@/types/types";
+import type {
+  RebuttalLeverKey,
+  RebuttalOption,
+  RoiAttachment,
+} from "@/types/types";
 
 type Props = {
   value: RebuttalOption[];
@@ -34,7 +48,6 @@ export function RebuttalOptions({ value, onChange }: Props) {
     const merged = REBUTTAL_LEVERS.map((l) =>
       l.key === lever ? next : (byLever.get(l.key) ?? null),
     ).filter((r): r is RebuttalOption => r !== null);
-    // If we didn't have it yet, it's been inserted at its canonical index.
     onChange(merged.length === value.length ? merged : [...others, next]);
   }
 
@@ -54,8 +67,8 @@ export function RebuttalOptions({ value, onChange }: Props) {
             </Badge>
           </div>
           <p className="text-xs text-muted-foreground">
-            One option per legitimate urgency / closing lever. Pick the best fit
-            on the call, edit freely, and keep what works in your library.
+            One option per legitimate urgency / closing lever. Attach a Ladder
+            ROI figure when the rebuttal lands better with a dollar number.
           </p>
         </div>
       </header>
@@ -69,10 +82,10 @@ export function RebuttalOptions({ value, onChange }: Props) {
               leverKey={lever.key}
               headline={option?.headline ?? ""}
               script={option?.script ?? ""}
-              onHeadlineChange={(v) =>
-                updateAt(lever.key, { headline: v })
-              }
+              roi={option?.roi}
+              onHeadlineChange={(v) => updateAt(lever.key, { headline: v })}
               onScriptChange={(v) => updateAt(lever.key, { script: v })}
+              onRoiChange={(next) => updateAt(lever.key, { roi: next })}
             />
           );
         })}
@@ -85,22 +98,31 @@ function RebuttalCard({
   leverKey,
   headline,
   script,
+  roi,
   onHeadlineChange,
   onScriptChange,
+  onRoiChange,
 }: {
   leverKey: RebuttalLeverKey;
   headline: string;
   script: string;
+  roi?: RoiAttachment;
   onHeadlineChange: (v: string) => void;
   onScriptChange: (v: string) => void;
+  onRoiChange: (next: RoiAttachment | undefined) => void;
 }) {
   const lever = leverByKey(leverKey);
   const Icon = lever.icon;
   const [copied, setCopied] = useState(false);
+  const [roiEditorOpen, setRoiEditorOpen] = useState(false);
   const hasContent = Boolean(headline || script);
 
   async function handleCopy() {
-    const body = [headline ? `— ${headline}` : null, script]
+    const body = [
+      headline ? `— ${headline}` : null,
+      script,
+      roi?.sentence ? `\n${roi.sentence}` : null,
+    ]
       .filter(Boolean)
       .join("\n");
     if (!body) return;
@@ -173,6 +195,93 @@ function RebuttalCard({
         className="resize-none text-sm"
         placeholder={`Script using the ${lever.name.toLowerCase()} lever — 1-3 sentences the rep can say live.`}
       />
+
+      {roi && !roiEditorOpen ? (
+        <RoiChip
+          attachment={roi}
+          onEdit={() => setRoiEditorOpen(true)}
+          onRemove={() => onRoiChange(undefined)}
+        />
+      ) : null}
+
+      {!roi && !roiEditorOpen ? (
+        <div className="flex items-center justify-between pt-1">
+          <p className="text-[10px] text-muted-foreground">
+            Optional: attach a Ladder ROI figure if it strengthens this rebuttal.
+          </p>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => setRoiEditorOpen(true)}
+            disabled={!hasContent}
+            className="gap-1.5 text-primary hover:text-primary"
+          >
+            <Plus className="h-3.5 w-3.5" />
+            Add ROI math
+          </Button>
+        </div>
+      ) : null}
+
+      {roiEditorOpen ? (
+        <RoiAttachmentEditor
+          value={roi}
+          onChange={onRoiChange}
+          onClose={() => setRoiEditorOpen(false)}
+        />
+      ) : null}
     </article>
+  );
+}
+
+function RoiChip({
+  attachment,
+  onEdit,
+  onRemove,
+}: {
+  attachment: RoiAttachment;
+  onEdit: () => void;
+  onRemove: () => void;
+}) {
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-primary/30 bg-primary/5 p-2">
+      <div className="flex min-w-0 items-center gap-2">
+        <div className="flex h-6 w-6 items-center justify-center rounded bg-primary/15 text-primary">
+          <Calculator className="h-3 w-3" />
+        </div>
+        <div className="flex min-w-0 flex-col">
+          <p className="font-mono text-[10px] font-semibold uppercase tracking-wider text-foreground">
+            ROI attached · {roiLabel(attachment.kind)}
+          </p>
+          <p className="truncate text-[11px] text-muted-foreground">
+            {formatMoney(attachment.monthlyWaste)}/mo wasted · save{" "}
+            {formatMoney(attachment.savingsMin)}-
+            {formatMoney(attachment.savingsMax)}/mo
+          </p>
+        </div>
+      </div>
+      <div className="flex items-center gap-1">
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={onEdit}
+          className="h-7 gap-1 px-2 text-[11px]"
+        >
+          <PencilLine className="h-3 w-3" />
+          Edit
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={onRemove}
+          className="h-7 gap-1 px-2 text-[11px] text-destructive hover:text-destructive"
+        >
+          <Trash2 className="h-3 w-3" />
+          Remove
+        </Button>
+      </div>
+    </div>
   );
 }

@@ -86,10 +86,14 @@ export function AnalysisEditor({
             `Rebuttal options:`,
             ...local.analysis.rebuttals.map((r) => {
               const lever = leverByKey(r.lever);
-              return [
+              const lines = [
                 `  [${lever.name}${r.headline ? ` — ${r.headline}` : ""}]`,
                 `  ${r.script}`,
-              ].join("\n");
+              ];
+              if (r.roi?.sentence) {
+                lines.push(`  ROI · ${r.roi.sentence}`);
+              }
+              return lines.join("\n");
             }),
           ]
         : [];

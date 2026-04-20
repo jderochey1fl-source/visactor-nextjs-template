@@ -89,10 +89,46 @@ export type RebuttalLeverKey =
   | "confidence-question"
   | "transparent-counter";
 
+export type RoiKind = "hiring-waste" | "territory-waste";
+
+export type HiringRoiInputs = {
+  salesRepsPerMonth: number;
+  canvassersPerMonth: number;
+};
+
+export type TerritoryRoiInputs = {
+  canvassers: number;
+  knocksPerCanvasserPerDay: number;
+  workingDaysPerMonth: number;
+  deadZonePct: number;
+  costPerKnock: number;
+};
+
+export type RoiAttachment =
+  | {
+      kind: "hiring-waste";
+      inputs: HiringRoiInputs;
+      monthlyWaste: number;
+      annualWaste: number;
+      savingsMin: number;
+      savingsMax: number;
+      sentence: string;
+    }
+  | {
+      kind: "territory-waste";
+      inputs: TerritoryRoiInputs;
+      monthlyWaste: number;
+      annualWaste: number;
+      savingsMin: number;
+      savingsMax: number;
+      sentence: string;
+    };
+
 export type RebuttalOption = {
   lever: RebuttalLeverKey;
   headline: string;
   script: string;
+  roi?: RoiAttachment;
 };
 
 export type ObjectionAnalysis = {
