@@ -89,6 +89,7 @@ export async function POST(req: Request) {
 
     return Response.json(experimental_output);
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error("[follow-up] generation failed", err);
     return Response.json(
       { error: "Failed to generate follow-up emails. Please try again." },

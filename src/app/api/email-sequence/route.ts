@@ -78,6 +78,7 @@ export async function POST(req: Request) {
 
     return Response.json(experimental_output);
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error("[email-sequence] generation failed", err);
     return Response.json(
       { error: "Failed to generate sequence. Please try again." },

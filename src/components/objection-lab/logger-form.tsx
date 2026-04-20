@@ -98,6 +98,7 @@ export function LoggerForm({ onAnalyzed, onCancel }: Props) {
       };
       onAnalyzed(draft);
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error("[v0] objection analyze failed", err);
       setError(
         err instanceof Error
