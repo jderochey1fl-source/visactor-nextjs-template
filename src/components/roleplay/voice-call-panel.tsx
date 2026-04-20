@@ -1,8 +1,15 @@
 "use client";
 
-import Vapi from "@vapi-ai/web";
-import { Flag, Mic, MicOff, PhoneCall, PhoneOff } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { VoiceProvider, useVoice } from "@humeai/voice-react";
+import {
+  AlertTriangle,
+  Flag,
+  Mic,
+  MicOff,
+  PhoneCall,
+  PhoneOff,
+} from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type {
@@ -18,117 +25,214 @@ type Props = {
   persona: Persona;
   mode: RoleplayMode;
   difficulty: Difficulty;
-  publicKey: string;
   onEnd: (transcript: string) => void;
 };
 
-type CallStatus = "idle" | "connecting" | "live" | "ending";
-
-type TurnLine = {
-  role: "user" | "assistant";
-  text: string;
-  at: number;
+type SessionConfig = {
+  systemPrompt: string;
+  configId: string | null;
+  voiceGender: "male" | "female";
+  maleConfigAvailable: boolean;
 };
 
-export function VoiceCallPanel({
+/**
+ * The Voice panel uses Hume EVI for speech-to-speech with prosody-aware
+ * emotion tagging. The flow is:
+ *   1. Ask /api/roleplay/hume-session for the scenario-specific system
+ *      prompt and the right configId (male vs female voice).
+ *   2. Ask /api/roleplay/hume-token for a short-lived access token so the
+ *      server-only HUME_API_KEY never touches the browser.
+ *   3. Mount <VoiceProvider> with that auth + configId, and inject the
+ *      system prompt as sessionSettings on open.
+ *   4. Inner <Call> uses useVoice() to connect, stream transcript, and
+ *      control mic / hangup.
+ */
+export function VoiceCallPanel(props: Props) {
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [session, setSession] = useState<SessionConfig | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const { scenario, persona, mode, difficulty } = props;
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const [tokenRes, sessionRes] = await Promise.all([
+          fetch("/api/roleplay/hume-token", { method: "POST" }),
+          fetch("/api/roleplay/hume-session", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+              scenarioId: scenario.id,
+              personaId: persona.id,
+              mode,
+              difficulty,
+            }),
+          }),
+        ]);
+
+        if (!tokenRes.ok) {
+          const body = await tokenRes.json().catch(() => ({}));
+          throw new Error(
+            body?.error ??
+              "Could not mint a Hume access token. Check HUME_API_KEY and HUME_SECRET.",
+          );
+        }
+        if (!sessionRes.ok) {
+          throw new Error("Could not build the Hume session prompt.");
+        }
+
+        const { accessToken: token } = (await tokenRes.json()) as {
+          accessToken: string;
+        };
+        const s = (await sessionRes.json()) as SessionConfig;
+
+        if (cancelled) return;
+        setAccessToken(token);
+        setSession(s);
+      } catch (e) {
+        if (cancelled) return;
+        const msg =
+          e instanceof Error ? e.message : "Failed to prepare voice session.";
+        setError(msg);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [scenario.id, persona.id, mode, difficulty]);
+
+  if (error) {
+    return (
+      <SceneShell {...props}>
+        <div className="flex flex-col items-center gap-3 text-center">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full border border-destructive/40 bg-destructive/5">
+            <AlertTriangle className="h-5 w-5 text-destructive" />
+          </div>
+          <div className="text-sm font-semibold">Voice unavailable</div>
+          <div className="max-w-md text-xs text-muted-foreground">{error}</div>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => props.onEnd("")}
+            className="mt-2"
+          >
+            Back to setup
+          </Button>
+        </div>
+      </SceneShell>
+    );
+  }
+
+  if (!accessToken || !session) {
+    return (
+      <SceneShell {...props}>
+        <div className="flex flex-col items-center gap-3 text-center">
+          <div className="h-12 w-12 animate-pulse rounded-full border border-border bg-card" />
+          <div className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+            Preparing voice session…
+          </div>
+        </div>
+      </SceneShell>
+    );
+  }
+
+  return (
+    <VoiceProvider
+      auth={{ type: "accessToken", value: accessToken }}
+      configId={session.configId ?? undefined}
+      sessionSettings={{ systemPrompt: session.systemPrompt }}
+    >
+      <Call {...props} session={session} />
+    </VoiceProvider>
+  );
+}
+
+/**
+ * Inner component — must be a CHILD of VoiceProvider because useVoice() reads
+ * from its context. Owns the transcript stream, mic/hangup UI, and the
+ * "end & debrief" hand-off back to the workbench.
+ */
+function Call({
   scenario,
   persona,
   mode,
-  difficulty,
-  publicKey,
+  session,
   onEnd,
-}: Props) {
-  const [status, setStatus] = useState<CallStatus>("idle");
-  const [muted, setMuted] = useState(false);
-  const [lines, setLines] = useState<TurnLine[]>([]);
-  const [error, setError] = useState<string | null>(null);
+}: Props & { session: SessionConfig }) {
+  const {
+    connect,
+    disconnect,
+    messages,
+    status,
+    mute,
+    unmute,
+    isMuted,
+  } = useVoice();
+
   const [elapsed, setElapsed] = useState(0);
-  const vapiRef = useRef<Vapi | null>(null);
+  const [connectError, setConnectError] = useState<string | null>(null);
   const startedAtRef = useRef<number | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Lazy init Vapi once per mount
-  useEffect(() => {
-    if (!publicKey) return;
-    const vapi = new Vapi(publicKey);
-    vapiRef.current = vapi;
+  const isLive = status.value === "connected";
+  const isConnecting = status.value === "connecting";
 
-    vapi.on("call-start", () => {
-      setStatus("live");
+  // Start / stop the call timer based on connection state.
+  useEffect(() => {
+    if (isLive && startedAtRef.current === null) {
       startedAtRef.current = Date.now();
       timerRef.current = setInterval(() => {
         if (startedAtRef.current) {
           setElapsed(Math.floor((Date.now() - startedAtRef.current) / 1000));
         }
       }, 500);
-    });
-
-    vapi.on("call-end", () => {
-      setStatus("idle");
-      if (timerRef.current) clearInterval(timerRef.current);
+    }
+    if (!isLive && timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
       startedAtRef.current = null;
-    });
-
-    vapi.on("error", (e: unknown) => {
-      const msg = e instanceof Error ? e.message : "Vapi connection error.";
-      setError(msg);
-      setStatus("idle");
-    });
-
-    // Transcript stream. Vapi emits `message` with transcript roles.
-    vapi.on("message", (m: Record<string, unknown>) => {
-      if (m.type === "transcript" && m.transcriptType === "final") {
-        const role = m.role === "user" ? "user" : "assistant";
-        const transcript = typeof m.transcript === "string" ? m.transcript : "";
-        if (!transcript.trim()) return;
-        setLines((prev) => [
-          ...prev,
-          { role, text: transcript, at: Date.now() },
-        ]);
-      }
-    });
-
+    }
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
-      vapi.stop();
-      vapiRef.current = null;
     };
-  }, [publicKey]);
+  }, [isLive]);
+
+  // Build the transcript-shaped list that the debrief + UI consume.
+  const lines = useMemo(() => {
+    return messages
+      .filter(
+        (m): m is typeof m & { type: "user_message" | "assistant_message" } =>
+          m.type === "user_message" || m.type === "assistant_message",
+      )
+      .map((m) => {
+        const role = m.type === "user_message" ? "user" : "assistant";
+        const text =
+          (m.message as { content?: string } | undefined)?.content ?? "";
+        return { role, text };
+      })
+      .filter((l) => l.text.trim().length > 0);
+  }, [messages]);
 
   const start = async () => {
-    setError(null);
-    setLines([]);
-    setStatus("connecting");
+    setConnectError(null);
     try {
-      const res = await fetch("/api/roleplay/vapi-config", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          scenarioId: scenario.id,
-          personaId: persona.id,
-          mode,
-          difficulty,
-        }),
-      });
-      if (!res.ok) throw new Error("Failed to build assistant config.");
-      const { assistant } = await res.json();
-      await vapiRef.current?.start(assistant);
+      await connect();
     } catch (e) {
-      const msg = e instanceof Error ? e.message : "Could not start the call.";
-      setError(msg);
-      setStatus("idle");
+      const msg =
+        e instanceof Error ? e.message : "Could not connect to Hume EVI.";
+      setConnectError(msg);
     }
   };
 
-  const stop = () => {
-    setStatus("ending");
-    vapiRef.current?.stop();
+  const hangUp = () => {
+    disconnect();
   };
 
   const toggleMute = () => {
-    const next = !muted;
-    setMuted(next);
-    vapiRef.current?.setMuted(next);
+    if (isMuted) unmute();
+    else mute();
   };
 
   const endAndDebrief = () => {
@@ -146,9 +250,8 @@ export function VoiceCallPanel({
       })
       .join("\n\n");
 
-    // Stop the call if still live
-    if (status === "live" || status === "connecting") {
-      vapiRef.current?.stop();
+    if (isLive || isConnecting) {
+      disconnect();
     }
     onEnd(transcript);
   };
@@ -156,156 +259,156 @@ export function VoiceCallPanel({
   const mm = String(Math.floor(elapsed / 60)).padStart(2, "0");
   const ss = String(elapsed % 60).padStart(2, "0");
 
-  const canStart = status === "idle";
-  const canStop = status === "live" || status === "connecting";
+  const needsMaleConfigHint =
+    mode === "user_is_rep" &&
+    session.voiceGender === "male" &&
+    !session.maleConfigAvailable;
 
   return (
-    <div className="flex h-full flex-col bg-background">
-      {/* Scene header */}
-      <div className="border-b border-border bg-card/40 px-6 py-3">
-        <div className="mx-auto flex max-w-3xl flex-col gap-1">
-          <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-            <span className="rounded-sm bg-primary/10 px-1.5 py-0.5 text-primary">
-              {scenario.stageLetter} · {scenario.stage}
-            </span>
-            <span>{scenario.name}</span>
-            <span>·</span>
-            <span>{difficulty}</span>
-            <span>·</span>
-            <span>voice</span>
-          </div>
-          <div className="text-xs text-foreground/80">{scenario.setup}</div>
-        </div>
-      </div>
-
-      {/* Call status */}
-      <div className="flex flex-1 flex-col items-center justify-center gap-6 px-6 py-8">
-        <div className="flex flex-col items-center gap-3">
-          <div
-            className={cn(
-              "flex h-28 w-28 items-center justify-center rounded-full border-4 transition-all",
-              status === "live"
-                ? "border-primary bg-primary/10"
-                : status === "connecting"
-                  ? "border-warning bg-warning/10 animate-pulse"
-                  : "border-border bg-card",
-            )}
-          >
-            {status === "live" ? (
-              <Mic
-                className={cn(
-                  "h-10 w-10 text-primary",
-                  !muted && "animate-pulse",
-                )}
-              />
-            ) : status === "connecting" ? (
-              <PhoneCall className="h-10 w-10 text-warning" />
-            ) : (
-              <Mic className="h-10 w-10 text-muted-foreground" />
-            )}
-          </div>
-          <div className="flex flex-col items-center gap-1">
-            <div className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-              {status === "live"
-                ? `On call · ${mm}:${ss}`
-                : status === "connecting"
-                  ? "Connecting..."
-                  : "Ready to dial"}
-            </div>
-            <div className="text-sm font-semibold">
-              {mode === "user_is_rep"
-                ? `${persona.name} — ${persona.title}`
-                : "Ladder AE"}
-            </div>
-            <div className="text-xs text-muted-foreground">
-              {persona.company}
-            </div>
-          </div>
-        </div>
-
-        {error ? (
-          <div className="rounded-md border border-destructive/40 bg-destructive/5 px-3 py-2 text-xs text-destructive">
-            {error}
-          </div>
-        ) : null}
-
-        {/* Controls */}
-        <div className="flex items-center gap-3">
-          {canStart ? (
-            <Button size="lg" onClick={start} className="gap-2">
-              <PhoneCall className="h-4 w-4" />
-              Start call
-            </Button>
-          ) : null}
-          {status === "live" ? (
-            <Button
-              size="lg"
-              variant="outline"
-              onClick={toggleMute}
-              className="gap-2"
-            >
-              {muted ? (
-                <>
-                  <MicOff className="h-4 w-4" />
-                  Unmute
-                </>
-              ) : (
-                <>
-                  <Mic className="h-4 w-4" />
-                  Mute
-                </>
+    <SceneShell
+      scenario={scenario}
+      persona={persona}
+      mode={mode}
+      difficulty={"neutral"}
+      onEnd={onEnd}
+    >
+      {/* Character card */}
+      <div className="flex flex-col items-center gap-3">
+        <div
+          className={cn(
+            "flex h-28 w-28 items-center justify-center rounded-full border-4 transition-all",
+            isLive
+              ? "border-primary bg-primary/10"
+              : isConnecting
+                ? "border-warning bg-warning/10 animate-pulse"
+                : "border-border bg-card",
+          )}
+        >
+          {isLive ? (
+            <Mic
+              className={cn(
+                "h-10 w-10 text-primary",
+                !isMuted && "animate-pulse",
               )}
-            </Button>
-          ) : null}
-          {canStop ? (
-            <Button
-              size="lg"
-              variant="destructive"
-              onClick={stop}
-              className="gap-2"
-            >
-              <PhoneOff className="h-4 w-4" />
-              Hang up
-            </Button>
-          ) : null}
+            />
+          ) : isConnecting ? (
+            <PhoneCall className="h-10 w-10 text-warning" />
+          ) : (
+            <Mic className="h-10 w-10 text-muted-foreground" />
+          )}
         </div>
-
-        {/* Live transcript */}
-        {lines.length > 0 ? (
-          <div className="mt-4 w-full max-w-2xl">
-            <div className="mb-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-              Live transcript
-            </div>
-            <div className="max-h-64 overflow-y-auto rounded-md border border-border bg-card p-4">
-              <ul className="flex flex-col gap-2">
-                {lines.map((l, i) => (
-                  <li
-                    key={i}
-                    className="flex items-start gap-2 text-xs leading-relaxed"
-                  >
-                    <Badge
-                      variant={l.role === "user" ? "default" : "muted"}
-                      className="shrink-0 font-mono text-[9px]"
-                    >
-                      {l.role === "user"
-                        ? mode === "user_is_rep"
-                          ? "REP"
-                          : "YOU"
-                        : mode === "user_is_rep"
-                          ? "BUYER"
-                          : "AE"}
-                    </Badge>
-                    <span className="text-foreground/90">{l.text}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+        <div className="flex flex-col items-center gap-1">
+          <div className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+            {isLive
+              ? `On call · ${mm}:${ss}`
+              : isConnecting
+                ? "Connecting…"
+                : "Ready to dial"}
           </div>
+          <div className="text-sm font-semibold">
+            {mode === "user_is_rep"
+              ? `${persona.name} — ${persona.title}`
+              : "Ladder AE"}
+          </div>
+          <div className="text-xs text-muted-foreground">{persona.company}</div>
+        </div>
+      </div>
+
+      {needsMaleConfigHint ? (
+        <div className="flex items-start gap-2 rounded-md border border-warning/40 bg-warning/5 px-3 py-2 text-xs text-warning">
+          <AlertTriangle className="h-4 w-4 shrink-0" />
+          <span>
+            Using the default (female) Hume voice for this male persona. Add
+            <code className="mx-1 rounded bg-card px-1 py-0.5 text-[11px]">
+              HUME_CONFIG_MALE
+            </code>
+            in project vars to get a matching male voice.
+          </span>
+        </div>
+      ) : null}
+
+      {connectError ? (
+        <div className="rounded-md border border-destructive/40 bg-destructive/5 px-3 py-2 text-xs text-destructive">
+          {connectError}
+        </div>
+      ) : null}
+
+      {/* Controls */}
+      <div className="flex items-center gap-3">
+        {!isLive && !isConnecting ? (
+          <Button size="lg" onClick={start} className="gap-2">
+            <PhoneCall className="h-4 w-4" />
+            Start call
+          </Button>
+        ) : null}
+        {isLive ? (
+          <Button
+            size="lg"
+            variant="outline"
+            onClick={toggleMute}
+            className="gap-2"
+          >
+            {isMuted ? (
+              <>
+                <MicOff className="h-4 w-4" />
+                Unmute
+              </>
+            ) : (
+              <>
+                <Mic className="h-4 w-4" />
+                Mute
+              </>
+            )}
+          </Button>
+        ) : null}
+        {isLive || isConnecting ? (
+          <Button
+            size="lg"
+            variant="destructive"
+            onClick={hangUp}
+            className="gap-2"
+          >
+            <PhoneOff className="h-4 w-4" />
+            Hang up
+          </Button>
         ) : null}
       </div>
+
+      {/* Live transcript */}
+      {lines.length > 0 ? (
+        <div className="mt-4 w-full max-w-2xl">
+          <div className="mb-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+            Live transcript
+          </div>
+          <div className="max-h-64 overflow-y-auto rounded-md border border-border bg-card p-4">
+            <ul className="flex flex-col gap-2">
+              {lines.map((l, i) => (
+                <li
+                  key={i}
+                  className="flex items-start gap-2 text-xs leading-relaxed"
+                >
+                  <Badge
+                    variant={l.role === "user" ? "default" : "muted"}
+                    className="shrink-0 font-mono text-[9px]"
+                  >
+                    {l.role === "user"
+                      ? mode === "user_is_rep"
+                        ? "REP"
+                        : "YOU"
+                      : mode === "user_is_rep"
+                        ? "BUYER"
+                        : "AE"}
+                  </Badge>
+                  <span className="text-foreground/90">{l.text}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      ) : null}
 
       {/* End & debrief */}
-      <div className="border-t border-border bg-card px-6 py-3">
+      <div className="absolute inset-x-0 bottom-0 border-t border-border bg-card px-6 py-3">
         <div className="mx-auto flex max-w-3xl items-center justify-between gap-2">
           <div className="text-xs text-muted-foreground">
             {lines.length > 0
@@ -324,6 +427,39 @@ export function VoiceCallPanel({
             End & debrief
           </Button>
         </div>
+      </div>
+    </SceneShell>
+  );
+}
+
+/**
+ * Scene shell (header + centered body). Kept as its own component so the
+ * pre-connect / error / live states all render inside the same frame.
+ */
+function SceneShell({
+  scenario,
+  difficulty,
+  children,
+}: Props & { children: React.ReactNode }) {
+  return (
+    <div className="relative flex h-full flex-col bg-background">
+      <div className="border-b border-border bg-card/40 px-6 py-3">
+        <div className="mx-auto flex max-w-3xl flex-col gap-1">
+          <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+            <span className="rounded-sm bg-primary/10 px-1.5 py-0.5 text-primary">
+              {scenario.stageLetter} · {scenario.stage}
+            </span>
+            <span>{scenario.name}</span>
+            <span>·</span>
+            <span>{difficulty}</span>
+            <span>·</span>
+            <span>voice · Hume EVI</span>
+          </div>
+          <div className="text-xs text-foreground/80">{scenario.setup}</div>
+        </div>
+      </div>
+      <div className="flex flex-1 flex-col items-center justify-center gap-6 px-6 pb-20 pt-8">
+        {children}
       </div>
     </div>
   );

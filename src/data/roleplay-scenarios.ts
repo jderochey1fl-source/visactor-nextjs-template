@@ -34,6 +34,7 @@ export type Persona = {
   bio: string; // personality + what they care about
   lens: string; // what they filter every pitch through
   idiomatic: string[]; // speech tics that make them sound real
+  voiceGender: "male" | "female"; // picks male vs female Hume EVI config
 };
 
 // ---------------------------------------------------------------------------
@@ -54,6 +55,7 @@ export const personas: Persona[] = [
       "What's the real number?",
       "Who else in DFW uses you?",
     ],
+    voiceGender: "male",
   },
   {
     id: "vp-sales",
@@ -68,6 +70,7 @@ export const personas: Persona[] = [
       "My owner's going to ask about ROI first.",
       "How does this talk to JobNimbus?",
     ],
+    voiceGender: "male",
   },
   {
     id: "sales-manager",
@@ -82,6 +85,7 @@ export const personas: Persona[] = [
       "Can I override the routing?",
       "What do I tell them Monday morning?",
     ],
+    voiceGender: "female",
   },
   {
     id: "gm",
@@ -96,6 +100,7 @@ export const personas: Persona[] = [
       "How long before we're live?",
       "Does this write to AccuLynx cleanly?",
     ],
+    voiceGender: "male",
   },
 ];
 

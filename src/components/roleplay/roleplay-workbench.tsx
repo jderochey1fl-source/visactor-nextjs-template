@@ -33,8 +33,12 @@ export function RoleplayWorkbench() {
   const persona =
     personas.find((p) => p.id === setup.personaId) ?? personas[0]!;
 
-  const publicKey = process.env.NEXT_PUBLIC_VAPI_PUBLIC_KEY;
-  const voiceAvailable = Boolean(publicKey);
+  // Voice runs through Hume EVI. HUME_API_KEY and HUME_CONFIG live server-
+  // side; the voice panel fetches an access token + the scenario-specific
+  // session config from /api/roleplay/*. If those fail, the panel shows a
+  // clear error. We surface "available" to the setup UI optimistically and
+  // let the Voice panel handle the actual provisioning.
+  const voiceAvailable = true;
 
   const handleEnd = (t: string) => {
     setTranscript(t);
@@ -78,7 +82,7 @@ export function RoleplayWorkbench() {
   }
 
   // running
-  if (setup.channel === "voice" && voiceAvailable && publicKey) {
+  if (setup.channel === "voice") {
     return (
       <VoiceCallPanel
         key={runKey}
@@ -86,7 +90,6 @@ export function RoleplayWorkbench() {
         persona={persona}
         mode={setup.mode}
         difficulty={setup.difficulty}
-        publicKey={publicKey}
         onEnd={handleEnd}
       />
     );

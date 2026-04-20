@@ -43,11 +43,25 @@ export async function POST(req: Request) {
       difficulty,
     });
 
+    // Pick the Hume config that matches the persona's voice gender when the
+    // AI is playing the buyer. When the AI plays the rep (user_is_buyer
+    // mode), we use the default female config since the rep is us either way.
+    const femaleConfigId = process.env.HUME_CONFIG ?? null;
+    const maleConfigId = process.env.HUME_CONFIG_MALE ?? null;
+
+    let configId: string | null = femaleConfigId;
+    if (mode === "user_is_rep" && persona.voiceGender === "male") {
+      configId = maleConfigId ?? femaleConfigId;
+    }
+
     return NextResponse.json({
       systemPrompt,
       openingLine: scenario.repOpener ?? null,
       scenarioName: scenario.name,
       personaName: persona.name,
+      configId,
+      voiceGender: persona.voiceGender,
+      maleConfigAvailable: Boolean(maleConfigId),
     });
   } catch (err) {
     // eslint-disable-next-line no-console

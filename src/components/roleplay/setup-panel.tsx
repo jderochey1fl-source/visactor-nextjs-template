@@ -167,8 +167,8 @@ export function SetupPanel({ value, onChange, onStart, voiceAvailable }: Props) 
             title="Live voice call"
             subtitle={
               voiceAvailable
-                ? "Real call simulation via Vapi — speak into your mic."
-                : "Set NEXT_PUBLIC_VAPI_PUBLIC_KEY to enable."
+                ? "Real call simulation via Hume EVI — empathic voice with prosody."
+                : "Set HUME_API_KEY, HUME_SECRET, and HUME_CONFIG to enable."
             }
             icon={voiceAvailable ? PhoneIncoming : Headphones}
           />
