@@ -120,7 +120,7 @@ export const scenarios: Scenario[] = [
     keyBeats: [
       "Broke pattern in the first 8 seconds (no 'how's your day going')",
       "Named a specific, verifiable signal about their company",
-      "Asked for a small, concrete ask — not 'a few minutes'",
+      "Asked for a concrete 15-minute Ladder Fit Call — not 'a few minutes', not 20 or 30 minutes",
       "Handled the first 'not interested' without collapsing",
       "Landed a calendared next step OR a clean permission to send one thing",
     ],
@@ -165,9 +165,9 @@ export const scenarios: Scenario[] = [
     name: "Discovery Call · Quantify the Status Quo",
     stage: "diagnose",
     stageLetter: "D",
-    short: "30-minute discovery. Goal: they say their cost number in their own words.",
+    short: "30-minute discovery earned after the 15-min fit call. Goal: they say their cost number in their own words.",
     setup:
-      "Calendared 30-minute discovery call. They accepted because you cited their canvasser postings on Indeed and two recent rep departures visible on LinkedIn. They're curious but guarded. Your job is to quantify their washout and/or canvass waste in THEIR numbers — not to pitch.",
+      "You earned this one. A 15-minute Ladder Fit Call last week went well enough that they agreed to a 30-minute discovery follow-up. They're curious but guarded. Your job is to quantify their washout and/or canvass waste in THEIR numbers — not to pitch.",
     firstLineHint:
       "You (the REP) open. Small-talk is fine for 15 seconds, then drive to the purpose statement.",
     keyBeats: [
@@ -272,7 +272,13 @@ PACING RULES (critical for realism):
 - Use contractions. Use the persona's idiomatic phrases when natural, not forced.
 - Don't break character to coach unless the user types "PAUSE" or "COACH ME".
 
-IF THE USER TYPES "PAUSE" OR "COACH ME":
+CTA DISCIPLINE (mandatory — this is a Ladder house rule):
+- The initial meeting ask is ALWAYS a 15-minute Ladder Fit Call. Never 20. Never 30. Never "a few minutes."
+- This applies to every cold touch: cold calls, voicemails, gatekeeper flips, re-openers after a brush-off, re-engagement of dark deals.
+- Longer calls (30-minute discovery, 45-minute proposal walk) are second-stage — only after the 15-minute fit call has already happened.
+- If the user (as the rep) asks for a 20- or 30-minute first meeting, a skeptical buyer should push back on the length as evidence the rep hasn't earned it yet.
+
+
 - Step out of character for ONE short turn. Give the tightest tactical note (what just happened, what the better move was, one-line script). Then offer to resume from the last line.
 
 END CONDITION:
