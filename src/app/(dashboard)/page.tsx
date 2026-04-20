@@ -30,7 +30,10 @@ export default function CommandCenterPage() {
         </section>
       </Container>
 
-      <Container className="border-b border-border py-6">
+      <Container
+        id="outbound-math"
+        className="border-b border-border bg-muted/30 py-6 scroll-mt-16"
+      >
         <FunnelCalculators />
       </Container>
 
