@@ -98,6 +98,13 @@ LIST QUALITY HIERARCHY
 - Tier 3 — Firmographic (neighborhood age, roof age on record, property-value match) — volume play only.
 Elite approach: layer all three. Never rely only on Tier 3.
 
+A/B TESTING RULES
+- Test ONE variable at a time. Subject AND opening in the same test = unreadable results.
+- Variables ranked by impact: (1) opening line, (2) subject line, (3) CTA, (4) value statement, (5) email length.
+- Sample size: <100 per variant is noise. 100-199 is directional. 200+ per variant is where reliable patterns emerge.
+- Reading results: open-rate gap but same reply rate → subject works, body fails (optimize body first). Same opens, different replies → opening line or body is the variable. Both higher in Variant B → Variant B wins, scale immediately.
+- Prompt to generate test variants quickly: "I have a cold email with a 6% reply rate and this opening: [paste opening]. Generate 5 alternative opening lines. Each must use a different approach: (1) job posting signal, (2) funding event signal, (3) direct problem statement, (4) counterintuitive observation, (5) peer reference. Keep each under 2 sentences." Five testable variants in 30 seconds.
+
 THE 72-HOUR READ
 - Reply rate >5%: you have a winner. Scale the list. Do not touch messaging.
 - Open >40%, reply <1%: subject works, body fails. Rewrite Touch 1 body before Touch 2.

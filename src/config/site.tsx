@@ -1,6 +1,7 @@
 import {
   BookOpen,
   Briefcase,
+  FlaskConical,
   LayoutDashboard,
   type LucideIcon,
   Mail,
@@ -57,6 +58,12 @@ export const navigations: Navigation[] = [
     name: "Email Generator",
     href: "/email-generator",
     description: "Full 6-touch LADDER sequence",
+  },
+  {
+    icon: FlaskConical,
+    name: "A/B Testing",
+    href: "/ab-testing",
+    description: "One variable per test, with significance checks",
   },
   {
     icon: ShieldAlert,
