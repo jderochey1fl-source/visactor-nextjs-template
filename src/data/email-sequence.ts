@@ -57,7 +57,7 @@ export const DEFAULT_SEQUENCE_INPUTS: SequenceInputs = {
   company: "Crestline Roofing",
   senderName: "Alex Rivera",
   senderCompany: "Ladder",
-  ctaPreference: "20-minute Ladder Fit Call Thursday or Friday",
+  ctaPreference: "15-minute Ladder Fit Call Thursday or Friday",
   tone: "direct",
 };
 
