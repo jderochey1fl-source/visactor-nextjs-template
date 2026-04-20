@@ -3,6 +3,7 @@ import {
   Briefcase,
   LayoutDashboard,
   type LucideIcon,
+  Mail,
   Sparkles,
   Telescope,
 } from "lucide-react";
@@ -49,6 +50,12 @@ export const navigations: Navigation[] = [
     name: "Agent",
     href: "/agent",
     description: "Your AI sales coach",
+  },
+  {
+    icon: Mail,
+    name: "Email Generator",
+    href: "/email-generator",
+    description: "Full 6-touch LADDER sequence",
   },
   {
     icon: BookOpen,
