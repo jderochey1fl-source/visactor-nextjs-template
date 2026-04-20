@@ -77,27 +77,27 @@ export const funnelCounts: { stage: LadderStage; count: number }[] = [
   { stage: "relationship", count: 1 },
 ];
 
-// Trailing-30 stage velocity (avg days in each stage for B2B SaaS cycle)
-export const stageVelocity: { stage: LadderStage; avgDays: number }[] = [
-  { stage: "locate", avgDays: 4.8 },
-  { stage: "approach", avgDays: 6.2 },
-  { stage: "diagnose", avgDays: 9.1 },
-  { stage: "design", avgDays: 11.4 },
-  { stage: "estimate", avgDays: 10.6 },
-  { stage: "relationship", avgDays: 32.0 },
-];
-
-// Stage-to-stage conversion (trailing 90 days)
-export const stageConversion: {
-  from: LadderStage;
-  to: LadderStage;
-  rate: number;
+/**
+ * Stage velocity — avg days a deal dwells in each stage.
+ * Each stage has its OWN target. A 5-day target for Locate is not the
+ * same as a 12-day target for Design, and Relationship has no "target"
+ * at all — it's retention / expansion, not a deal clock.
+ *
+ * Sum of flow-through targets (Locate → Estimate) ≈ 44d, which aligns
+ * with the 52d average cycle shown in KPIs (some slop for gaps between
+ * stages). This is how an honest SaaS funnel reads.
+ */
+export const stageVelocity: {
+  stage: LadderStage;
+  avgDays: number;
+  targetDays: number | null; // null = retention stage, no target
 }[] = [
-  { from: "locate", to: "approach", rate: 0.38 },
-  { from: "approach", to: "diagnose", rate: 0.44 },
-  { from: "diagnose", to: "design", rate: 0.54 },
-  { from: "design", to: "estimate", rate: 0.58 },
-  { from: "estimate", to: "relationship", rate: 0.64 },
+  { stage: "locate", avgDays: 4.8, targetDays: 5 },
+  { stage: "approach", avgDays: 6.2, targetDays: 7 },
+  { stage: "diagnose", avgDays: 9.1, targetDays: 10 },
+  { stage: "design", avgDays: 11.4, targetDays: 12 },
+  { stage: "estimate", avgDays: 10.6, targetDays: 10 },
+  { stage: "relationship", avgDays: 32.0, targetDays: null },
 ];
 
 // Revenue trend — new ARR signed per week, last 12 weeks

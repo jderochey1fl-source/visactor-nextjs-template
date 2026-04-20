@@ -1,11 +1,11 @@
 import { ArrowRight } from "lucide-react";
-import { funnelCounts, ladderStages, stageConversion } from "@/data/ladder";
+import { funnelCounts, ladderStages } from "@/data/ladder";
 import { cn } from "@/lib/utils";
 import type { LadderStage } from "@/types/types";
 
-const conversionByFrom = Object.fromEntries(
-  stageConversion.map((c) => [c.from, c]),
-) as Record<LadderStage, (typeof stageConversion)[number] | undefined>;
+const countByStage = Object.fromEntries(
+  funnelCounts.map((f) => [f.stage, f.count]),
+) as Record<LadderStage, number>;
 
 const accentByIndex = [
   "bg-primary",
@@ -18,6 +18,7 @@ const accentByIndex = [
 
 export function LadderFunnel() {
   const max = Math.max(...funnelCounts.map((f) => f.count));
+  const topOfFunnel = countByStage[ladderStages[0].key];
 
   return (
     <div className="flex flex-col gap-4">
@@ -27,7 +28,8 @@ export function LadderFunnel() {
             LADDER Funnel
           </h2>
           <p className="text-xs text-muted-foreground">
-            Prospects currently in each stage &middot; conversion is trailing 90d
+            Live pipeline snapshot &middot; carryover is count-to-count from the
+            stage above
           </p>
         </div>
         <div className="flex items-center gap-3 text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
@@ -38,18 +40,24 @@ export function LadderFunnel() {
             <span className="h-2 w-2 rounded-sm bg-hot" /> Close
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-sm bg-success" /> Win
+            <span className="h-2 w-2 rounded-sm bg-success" /> Customer
           </span>
         </div>
       </div>
 
       <div className="flex flex-col gap-1.5">
         {ladderStages.map((stage, idx) => {
-          const row = funnelCounts.find((f) => f.stage === stage.key);
-          const count = row?.count ?? 0;
+          const count = countByStage[stage.key] ?? 0;
           const width = (count / max) * 100;
-          const conv = conversionByFrom[stage.key];
-          const next = ladderStages[idx + 1];
+          const prev = ladderStages[idx - 1];
+          const prevCount = prev ? countByStage[prev.key] : null;
+          // Live carryover: this stage's count / previous stage's count.
+          // Guaranteed to match the bars on the screen, no stale rate table.
+          const carryover =
+            prevCount && prevCount > 0 ? count / prevCount : null;
+          const fromTop =
+            topOfFunnel > 0 ? (count / topOfFunnel) * 100 : 0;
+
           return (
             <div
               key={stage.key}
@@ -86,20 +94,25 @@ export function LadderFunnel() {
                 </div>
               </div>
 
-              <div className="flex w-[86px] items-center justify-end gap-1 text-right">
-                {conv && next ? (
+              <div className="flex w-[96px] flex-col items-end gap-0.5 text-right leading-none">
+                {carryover !== null ? (
                   <>
-                    <ArrowRight className="h-3 w-3 text-muted-foreground" />
-                    <span className="font-mono text-xs font-semibold text-foreground">
-                      {(conv.rate * 100).toFixed(0)}%
-                    </span>
-                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                      {next.letter}
+                    <div className="flex items-center gap-1">
+                      <ArrowRight className="h-3 w-3 rotate-90 text-muted-foreground" />
+                      <span className="font-mono text-xs font-semibold text-foreground">
+                        {Math.round(carryover * 100)}%
+                      </span>
+                      <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                        carry
+                      </span>
+                    </div>
+                    <span className="font-mono text-[10px] text-muted-foreground">
+                      {fromTop.toFixed(1)}% of top
                     </span>
                   </>
                 ) : (
                   <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                    win
+                    top of funnel
                   </span>
                 )}
               </div>
