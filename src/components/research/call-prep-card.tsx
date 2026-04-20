@@ -3,14 +3,15 @@
 import {
   AlertTriangle,
   ArrowRight,
-  Building,
-  CloudLightning,
+  Briefcase,
+  Building2,
   Copy,
   DollarSign,
+  Map,
   MessageSquareQuote,
   RefreshCw,
   Target,
-  UserCircle,
+  Users,
 } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
@@ -36,6 +37,11 @@ export function CallPrepCard({
     }
   };
 
+  const contact =
+    result.prospect.contactName && result.prospect.contactTitle
+      ? `${result.prospect.contactName} · ${result.prospect.contactTitle}`
+      : result.prospect.contactName ?? null;
+
   return (
     <div className="flex flex-col gap-4">
       {/* Header */}
@@ -51,10 +57,12 @@ export function CallPrepCard({
               </Badge>
             </div>
             <h2 className="text-xl font-semibold tracking-tight">
-              {result.prospect.name}
+              {result.prospect.companyName}
             </h2>
             <p className="text-sm text-muted-foreground">
-              {result.prospect.address}
+              {result.prospect.hqCity}, {result.prospect.hqState}
+              {result.prospect.website ? ` · ${result.prospect.website}` : ""}
+              {contact ? ` · ${contact}` : ""}
             </p>
           </div>
           <div className="flex gap-2">
@@ -83,73 +91,72 @@ export function CallPrepCard({
       {/* Intel grid */}
       <div className="grid grid-cols-1 gap-4 tablet:grid-cols-2">
         <IntelCard
-          icon={Building}
-          label="Property"
+          icon={Building2}
+          label="Company"
           accent="primary"
           rows={[
-            ["Year built (est.)", String(result.propertyIntel.estYearBuilt)],
-            [
-              "Roof age (est.)",
-              `${result.propertyIntel.estRoofAge} yrs`,
-            ],
-            ["Sqft", result.propertyIntel.sqft.toLocaleString()],
-            ["Material", result.propertyIntel.material],
-            ["Pitch", result.propertyIntel.pitch],
+            ["Headcount", result.companyIntel.estHeadcount],
+            ["Revenue (est.)", result.companyIntel.estRevenue],
+            ["Years active", `${result.companyIntel.yearsActive} yrs`],
+            ["Motion", result.companyIntel.primaryMotion],
+            ["States", result.companyIntel.statesServed.join(", ")],
           ]}
         />
         <IntelCard
-          icon={CloudLightning}
-          label="Storm history"
+          icon={Users}
+          label="Sales motion"
           accent="hot"
           rows={[
-            ["Last event", result.stormHistory.lastMajorEvent],
-            ["Hail max", result.stormHistory.hailMaxSize],
-            ["Wind peak", result.stormHistory.windPeak],
             [
-              "Claim likelihood",
-              `${Math.round(result.stormHistory.claimLikelihood * 100)}%`,
+              "Canvassing",
+              result.salesMotion.canvassingActive ? "Active" : "Inactive",
             ],
+            ["Rep count", result.salesMotion.estSalesReps],
+            ["Channel", result.salesMotion.dominantChannel],
+            ["Tech stack", result.salesMotion.techStack.join(", ")],
+            ["Retention", result.salesMotion.retentionSignal],
           ]}
         />
         <IntelCard
-          icon={UserCircle}
-          label="Owner profile"
+          icon={Briefcase}
+          label="Hiring signals"
           accent="success"
           rows={[
-            ["Persona", result.ownerProfile.likelyPersona],
-            ["Tenure", `${result.ownerProfile.tenureYears} yrs`],
-            ["Income", result.ownerProfile.incomeBracket],
             [
-              "Priorities",
-              result.ownerProfile.priorities.slice(0, 2).join(" · "),
+              "Open roles",
+              `${result.hiringSignals.openRolesCount} live`,
             ],
+            [
+              "Recent roles",
+              result.hiringSignals.recentRoles.join(" · "),
+            ],
+            ["Job boards", result.hiringSignals.jobBoards.join(", ")],
+            ["Churn signal", result.hiringSignals.recentHireChurn],
           ]}
         />
         <IntelCard
-          icon={Target}
-          label="Competitive"
+          icon={Map}
+          label="Territory & storms"
           accent="warning"
           rows={[
+            ["Primary metro", result.territorySignals.primaryMetro],
+            ["Storm window", result.territorySignals.stormWindow],
             [
-              "Recent quotes",
-              result.competitive.recentlyQuotedBy.join(", "),
+              "Closed-deal density",
+              result.territorySignals.closedDealDensity,
             ],
             [
-              "Nbhd installs",
-              `${result.competitive.neighborhoodInstalls} in 90d`,
+              "Competitors",
+              result.territorySignals.keyCompetitors.join(", "),
             ],
-            ["Dominant material", result.competitive.dominantMaterial],
+            ["Knock waste", result.territorySignals.knockWasteSignal],
           ]}
         />
       </div>
 
       {/* Tactical */}
       <div className="grid grid-cols-1 gap-4 laptop:grid-cols-3">
-        <SectionCard
-          icon={Target}
-          title="Priority points"
-          accent="primary"
-        >
+        <SectionCard icon={Target} title="Priority points" accent="primary">
           <ol className="flex flex-col gap-2">
             {result.callPrep.priorityPoints.map((p, i) => (
               <li key={p} className="flex gap-2">
@@ -180,7 +187,11 @@ export function CallPrepCard({
         </SectionCard>
 
         <div className="flex flex-col gap-4">
-          <SectionCard icon={DollarSign} title="Pricing anchor" accent="success">
+          <SectionCard
+            icon={DollarSign}
+            title="Pricing anchor"
+            accent="success"
+          >
             <p className="text-sm leading-relaxed">
               {result.callPrep.pricingAnchor}
             </p>
@@ -271,27 +282,42 @@ function SectionCard({
 
 function buildTextReport(r: ResearchResult) {
   const lines: string[] = [];
-  lines.push(`CALL PREP — ${r.prospect.name} (${r.prospect.address})`);
+  const contact =
+    r.prospect.contactName && r.prospect.contactTitle
+      ? `${r.prospect.contactName} (${r.prospect.contactTitle})`
+      : r.prospect.contactName ?? "";
+  lines.push(
+    `CALL PREP — ${r.prospect.companyName} · ${r.prospect.hqCity}, ${r.prospect.hqState}${
+      contact ? ` · ${contact}` : ""
+    }`,
+  );
   lines.push("");
   lines.push(`OPENING LINE:\n${r.callPrep.openingLine}`);
   lines.push("");
-  lines.push("PROPERTY:");
+  lines.push("COMPANY:");
   lines.push(
-    `- Built ${r.propertyIntel.estYearBuilt}, roof est. ${r.propertyIntel.estRoofAge} yrs, ${r.propertyIntel.sqft} sqft, ${r.propertyIntel.material}, ${r.propertyIntel.pitch}`,
+    `- ${r.companyIntel.estHeadcount} | ${r.companyIntel.estRevenue} | ${r.companyIntel.yearsActive} yrs | ${r.companyIntel.primaryMotion} | ${r.companyIntel.statesServed.join(", ")}`,
   );
-  lines.push("STORM:");
+  lines.push("SALES MOTION:");
   lines.push(
-    `- ${r.stormHistory.lastMajorEvent} | hail ${r.stormHistory.hailMaxSize} | wind ${r.stormHistory.windPeak} | claim likelihood ${Math.round(r.stormHistory.claimLikelihood * 100)}%`,
+    `- Canvassing ${r.salesMotion.canvassingActive ? "ACTIVE" : "inactive"} | ${r.salesMotion.estSalesReps} | ${r.salesMotion.dominantChannel}`,
   );
-  lines.push("OWNER:");
+  lines.push(`- Tech stack: ${r.salesMotion.techStack.join(", ")}`);
+  lines.push(`- Retention: ${r.salesMotion.retentionSignal}`);
+  lines.push("HIRING SIGNALS:");
   lines.push(
-    `- ${r.ownerProfile.likelyPersona} | ${r.ownerProfile.tenureYears}y | ${r.ownerProfile.incomeBracket}`,
+    `- ${r.hiringSignals.openRolesCount} open | roles: ${r.hiringSignals.recentRoles.join(", ")} | boards: ${r.hiringSignals.jobBoards.join(", ")}`,
   );
-  lines.push(`- Priorities: ${r.ownerProfile.priorities.join("; ")}`);
-  lines.push("COMPETITIVE:");
+  lines.push(`- Churn: ${r.hiringSignals.recentHireChurn}`);
+  lines.push("TERRITORY & STORMS:");
   lines.push(
-    `- Quoted by: ${r.competitive.recentlyQuotedBy.join(", ")} | ${r.competitive.neighborhoodInstalls} nbhd installs | ${r.competitive.dominantMaterial}`,
+    `- ${r.territorySignals.primaryMetro} | ${r.territorySignals.stormWindow}`,
   );
+  lines.push(`- Closed-deal density: ${r.territorySignals.closedDealDensity}`);
+  lines.push(
+    `- Competitors: ${r.territorySignals.keyCompetitors.join(", ")}`,
+  );
+  lines.push(`- Knock waste: ${r.territorySignals.knockWasteSignal}`);
   lines.push("");
   lines.push("PRIORITY POINTS:");
   r.callPrep.priorityPoints.forEach((p, i) =>

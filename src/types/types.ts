@@ -170,32 +170,40 @@ export type ResearchAgent = {
 
 export type ResearchResult = {
   prospect: {
-    name: string;
-    address: string;
+    companyName: string;
+    contactName?: string;
+    contactTitle?: string;
+    website?: string;
+    hqCity: string;
+    hqState: string;
   };
-  propertyIntel: {
-    estYearBuilt: number;
-    estRoofAge: number;
-    sqft: number;
-    material: string;
-    pitch: string;
+  companyIntel: {
+    estHeadcount: string;
+    estRevenue: string;
+    yearsActive: number;
+    primaryMotion: string;
+    services: string[];
+    statesServed: string[];
   };
-  stormHistory: {
-    lastMajorEvent: string;
-    hailMaxSize: string;
-    windPeak: string;
-    claimLikelihood: number;
+  salesMotion: {
+    canvassingActive: boolean;
+    estSalesReps: string;
+    dominantChannel: string;
+    techStack: string[];
+    retentionSignal: string;
   };
-  ownerProfile: {
-    likelyPersona: string;
-    incomeBracket: string;
-    tenureYears: number;
-    priorities: string[];
+  hiringSignals: {
+    openRolesCount: number;
+    recentRoles: string[];
+    jobBoards: string[];
+    recentHireChurn: string;
   };
-  competitive: {
-    recentlyQuotedBy: string[];
-    neighborhoodInstalls: number;
-    dominantMaterial: string;
+  territorySignals: {
+    primaryMetro: string;
+    stormWindow: string;
+    closedDealDensity: string;
+    keyCompetitors: string[];
+    knockWasteSignal: string;
   };
   callPrep: {
     openingLine: string;

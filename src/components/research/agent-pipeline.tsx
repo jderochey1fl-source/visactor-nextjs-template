@@ -2,12 +2,12 @@
 
 import {
   Activity,
-  Building,
+  Briefcase,
+  Building2,
   CheckCircle2,
-  CloudLightning,
   Loader2,
-  Target,
-  UserCircle,
+  Map,
+  Users,
 } from "lucide-react";
 import { researchAgents } from "@/data/research";
 import { cn } from "@/lib/utils";
@@ -16,10 +16,10 @@ import type { ProspectInput } from "./prospect-form";
 export type AgentStatus = "pending" | "running" | "done";
 
 const icons: Record<string, React.ComponentType<{ className?: string }>> = {
-  "agent-property": Building,
-  "agent-storm": CloudLightning,
-  "agent-owner": UserCircle,
-  "agent-competitive": Target,
+  "agent-company": Building2,
+  "agent-motion": Users,
+  "agent-hiring": Briefcase,
+  "agent-territory": Map,
   "agent-synth": Activity,
 };
 
@@ -41,8 +41,8 @@ export function AgentPipeline({
           </h2>
           <p className="text-xs text-muted-foreground">
             {prospect
-              ? `Researching ${prospect.name} · ${prospect.address}`
-              : "Waiting for prospect input"}
+              ? `Researching ${prospect.companyName} · ${prospect.hqCity}, ${prospect.hqState}`
+              : "Waiting for company input"}
           </p>
         </div>
         <PhasePill phase={phase} />

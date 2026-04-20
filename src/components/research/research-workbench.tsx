@@ -1,10 +1,11 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { researchAgents, demoResearchResult } from "@/data/research";
+import { demoResearchResult, researchAgents } from "@/data/research";
 import type { ResearchResult } from "@/types/types";
 import { AgentPipeline, type AgentStatus } from "./agent-pipeline";
 import { CallPrepCard } from "./call-prep-card";
+import { IcpDefinition } from "./icp-definition";
 import { ProspectForm, type ProspectInput } from "./prospect-form";
 
 type Phase = "idle" | "running" | "complete";
@@ -36,9 +37,16 @@ export function ResearchWorkbench() {
           setResult({
             ...demoResearchResult,
             prospect: {
-              name: input.name || demoResearchResult.prospect.name,
-              address:
-                input.address || demoResearchResult.prospect.address,
+              companyName:
+                input.companyName || demoResearchResult.prospect.companyName,
+              contactName:
+                input.contactName ?? demoResearchResult.prospect.contactName,
+              contactTitle:
+                input.contactTitle ??
+                demoResearchResult.prospect.contactTitle,
+              website: input.website ?? demoResearchResult.prospect.website,
+              hqCity: input.hqCity || demoResearchResult.prospect.hqCity,
+              hqState: input.hqState || demoResearchResult.prospect.hqState,
             },
           });
           setPhase("complete");
@@ -57,33 +65,38 @@ export function ResearchWorkbench() {
   }, []);
 
   return (
-    <div className="grid grid-cols-1 gap-6 laptop:grid-cols-[360px_1fr]">
-      <div className="flex flex-col gap-4">
-        <ProspectForm onSubmit={run} disabled={phase === "running"} />
-      </div>
+    <div className="flex flex-col gap-6">
+      <IcpDefinition />
 
-      <div className="flex flex-col gap-6">
-        <AgentPipeline
-          statuses={statuses}
-          phase={phase}
-          prospect={prospect}
-        />
+      <div className="grid grid-cols-1 gap-6 laptop:grid-cols-[360px_1fr]">
+        <div className="flex flex-col gap-4">
+          <ProspectForm onSubmit={run} disabled={phase === "running"} />
+        </div>
 
-        {phase === "complete" && result ? (
-          <CallPrepCard result={result} onReset={reset} />
-        ) : (
-          <div className="rounded-lg border border-dashed border-border bg-muted/30 p-10 text-center">
-            <p className="text-sm font-medium">
-              {phase === "running"
-                ? "Synthesizing intelligence..."
-                : "Run research to see the call prep card."}
-            </p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Opening line, priority points, likely objections, pricing anchor,
-              and the next step — synthesized from the five agents above.
-            </p>
-          </div>
-        )}
+        <div className="flex flex-col gap-6">
+          <AgentPipeline
+            statuses={statuses}
+            phase={phase}
+            prospect={prospect}
+          />
+
+          {phase === "complete" && result ? (
+            <CallPrepCard result={result} onReset={reset} />
+          ) : (
+            <div className="rounded-lg border border-dashed border-border bg-muted/30 p-10 text-center">
+              <p className="text-sm font-medium">
+                {phase === "running"
+                  ? "Synthesizing intelligence..."
+                  : "Run research to see the call prep card."}
+              </p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Opening line, priority points, likely objections, pricing
+                anchor, and the next step — synthesized from the five agents
+                above.
+              </p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
