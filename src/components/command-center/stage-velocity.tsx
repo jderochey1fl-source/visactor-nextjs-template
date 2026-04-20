@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 
 export function StageVelocity() {
   const max = Math.max(...stageVelocity.map((s) => s.avgDays));
-  const benchmark = 5; // internal target days in stage
+  const benchmark = 7; // internal target days in stage — longer for Day-1 SaaS cycle
 
   return (
     <div className="flex flex-col gap-4">

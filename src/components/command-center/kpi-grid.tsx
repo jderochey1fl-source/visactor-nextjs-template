@@ -1,49 +1,46 @@
-import { ArrowDownRight, ArrowUpRight, Clock, DollarSign, Percent, TrendingUp } from "lucide-react";
-import { kpis } from "@/data/ladder";
+import { Clock, DollarSign, Percent, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type KPI = {
   label: string;
   value: string;
-  change: number;
-  changeLabel: string;
+  subtitle: string;
+  tag?: string;
   icon: React.ComponentType<{ className?: string }>;
-  invertColor?: boolean; // e.g. faster cycle = good, so negative change = green
   accent?: "primary" | "hot" | "success";
 };
 
+// Day-1 founding-AE reality. No manufactured momentum badges.
 const items: KPI[] = [
   {
     label: "Pipeline Value",
-    value: `$${(kpis.pipelineValue / 1_000_000).toFixed(2)}M`,
-    change: kpis.pipelineChange,
-    changeLabel: "vs. last 30d",
+    value: "$0",
+    subtitle: "target: $500K",
+    tag: "YEAR 1 QUOTA",
     icon: DollarSign,
     accent: "primary",
   },
   {
     label: "Close Rate",
-    value: `${(kpis.closeRate * 100).toFixed(1)}%`,
-    change: kpis.closeRateChange,
-    changeLabel: "vs. last 30d",
+    value: "—",
+    subtitle: "baseline pending",
     icon: Percent,
     accent: "success",
   },
   {
     label: "Avg Deal Size",
-    value: `$${(kpis.avgDealSize / 1000).toFixed(1)}k`,
-    change: kpis.avgDealChange,
-    changeLabel: "vs. last 30d",
+    value: "$5,988",
+    subtitle: "annual contract value",
+    tag: "~$499/mo",
     icon: TrendingUp,
     accent: "hot",
   },
   {
     label: "Cycle Time",
-    value: `${kpis.cycleDays}d`,
-    change: kpis.cycleChange,
-    changeLabel: "locate → signed",
+    value: "45d",
+    subtitle: "target",
+    tag: "ESTIMATE",
     icon: Clock,
-    invertColor: true,
   },
 ];
 
@@ -57,8 +54,7 @@ export function KpiGrid() {
   );
 }
 
-function KpiCard({ label, value, change, changeLabel, icon: Icon, invertColor, accent }: KPI) {
-  const positive = invertColor ? change < 0 : change > 0;
+function KpiCard({ label, value, subtitle, tag, icon: Icon, accent }: KPI) {
   return (
     <div className="relative flex flex-col gap-3 bg-card p-5 transition-colors hover:bg-muted/40">
       <div className="flex items-center justify-between">
@@ -81,24 +77,13 @@ function KpiCard({ label, value, change, changeLabel, icon: Icon, invertColor, a
         <span className="font-mono text-3xl font-semibold tracking-tight text-foreground">
           {value}
         </span>
-        <span
-          className={cn(
-            "inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 text-xs font-medium",
-            positive
-              ? "bg-success/10 text-success"
-              : "bg-destructive/10 text-destructive",
-          )}
-        >
-          {change >= 0 ? "+" : ""}
-          {(change * 100).toFixed(1)}%
-          {positive ? (
-            <ArrowUpRight className="h-3 w-3" />
-          ) : (
-            <ArrowDownRight className="h-3 w-3" />
-          )}
-        </span>
+        {tag ? (
+          <span className="inline-flex items-center rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+            {tag}
+          </span>
+        ) : null}
       </div>
-      <span className="text-xs text-muted-foreground">{changeLabel}</span>
+      <span className="text-xs text-muted-foreground">{subtitle}</span>
     </div>
   );
 }

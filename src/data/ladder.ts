@@ -67,14 +67,14 @@ export const stageByKey: Record<LadderStage, StageInfo> = Object.fromEntries(
   ladderStages.map((s) => [s.key, s]),
 ) as Record<LadderStage, StageInfo>;
 
-// Current funnel counts (companies currently in each stage of Ladder's pipeline)
+// Current funnel counts — realistic solo founding-AE pipeline, first ~90 days.
 export const funnelCounts: { stage: LadderStage; count: number }[] = [
-  { stage: "locate", count: 428 },
-  { stage: "approach", count: 164 },
-  { stage: "diagnose", count: 71 },
-  { stage: "design", count: 38 },
-  { stage: "estimate", count: 22 },
-  { stage: "relationship", count: 14 },
+  { stage: "locate", count: 45 },
+  { stage: "approach", count: 18 },
+  { stage: "diagnose", count: 9 },
+  { stage: "design", count: 5 },
+  { stage: "estimate", count: 3 },
+  { stage: "relationship", count: 1 },
 ];
 
 // Trailing-30 stage velocity (avg days in each stage for B2B SaaS cycle)

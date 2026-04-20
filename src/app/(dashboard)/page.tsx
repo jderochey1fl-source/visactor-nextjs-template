@@ -1,5 +1,6 @@
 import { ActivityFeed } from "@/components/command-center/activity-feed";
 import { CallPrepHypothesis } from "@/components/command-center/call-prep-hypothesis";
+import { DemoBanner } from "@/components/command-center/demo-banner";
 import { FunnelCalculators } from "@/components/command-center/funnel-calculators";
 import { KpiGrid } from "@/components/command-center/kpi-grid";
 import { LadderFunnel } from "@/components/command-center/ladder-funnel";
@@ -11,6 +12,7 @@ import Container from "@/components/container";
 export default function CommandCenterPage() {
   return (
     <div>
+      <DemoBanner />
       <KpiGrid />
 
       <Container className="grid grid-cols-1 gap-6 border-b border-border py-6 laptop:grid-cols-3">
