@@ -36,16 +36,16 @@ type SessionConfig = {
 };
 
 /**
- * The Voice panel uses Hume EVI for speech-to-speech with prosody-aware
- * emotion tagging. The flow is:
- *   1. Ask /api/roleplay/hume-session for the scenario-specific system
- *      prompt and the right configId (male vs female voice).
- *   2. Ask /api/roleplay/hume-token for a short-lived access token so the
- *      server-only HUME_API_KEY never touches the browser.
- *   3. Mount <VoiceProvider> with that auth + configId, and inject the
- *      system prompt as sessionSettings on open.
- *   4. Inner <Call> uses useVoice() to connect, stream transcript, and
- *      control mic / hangup.
+ * Voice Role Play panel (Hume EVI).
+ *
+ * API flow:
+ *   1. POST /api/roleplay/hume-session       → scenario system prompt + right configId
+ *   2. POST /api/roleplay/hume-token         → short-lived access token
+ *   3. <VoiceProvider> wraps the <Call> body (event handlers only — per Hume React SDK)
+ *   4. Inside <Call>, useVoice().connect({ auth, configId, sessionSettings })
+ *
+ * The access token is minted server-side so HUME_API_KEY / HUME_SECRET never
+ * touch the browser.
  */
 export function VoiceCallPanel(props: Props) {
   const [accessToken, setAccessToken] = useState<string | null>(null);
@@ -139,37 +139,27 @@ export function VoiceCallPanel(props: Props) {
   }
 
   return (
-    <VoiceProvider
-      auth={{ type: "accessToken", value: accessToken }}
-      configId={session.configId ?? undefined}
-      sessionSettings={{ systemPrompt: session.systemPrompt }}
-    >
-      <Call {...props} session={session} />
+    <VoiceProvider>
+      <Call {...props} session={session} accessToken={accessToken} />
     </VoiceProvider>
   );
 }
 
 /**
- * Inner component — must be a CHILD of VoiceProvider because useVoice() reads
- * from its context. Owns the transcript stream, mic/hangup UI, and the
- * "end & debrief" hand-off back to the workbench.
+ * Inner Call component — MUST be a child of <VoiceProvider> because
+ * useVoice() reads from its context. Owns the actual connect(), transcript
+ * stream, mic/hangup UI, and the end-and-debrief hand-off.
  */
 function Call({
   scenario,
   persona,
   mode,
   session,
+  accessToken,
   onEnd,
-}: Props & { session: SessionConfig }) {
-  const {
-    connect,
-    disconnect,
-    messages,
-    status,
-    mute,
-    unmute,
-    isMuted,
-  } = useVoice();
+}: Props & { session: SessionConfig; accessToken: string }) {
+  const { connect, disconnect, messages, status, mute, unmute, isMuted } =
+    useVoice();
 
   const [elapsed, setElapsed] = useState(0);
   const [connectError, setConnectError] = useState<string | null>(null);
@@ -179,7 +169,6 @@ function Call({
   const isLive = status.value === "connected";
   const isConnecting = status.value === "connecting";
 
-  // Start / stop the call timer based on connection state.
   useEffect(() => {
     if (isLive && startedAtRef.current === null) {
       startedAtRef.current = Date.now();
@@ -199,18 +188,19 @@ function Call({
     };
   }, [isLive]);
 
-  // Build the transcript-shaped list that the debrief + UI consume.
+  // Build transcript from the streaming messages array.
   const lines = useMemo(() => {
     return messages
       .filter(
-        (m): m is typeof m & { type: "user_message" | "assistant_message" } =>
-          m.type === "user_message" || m.type === "assistant_message",
+        (m) => m.type === "user_message" || m.type === "assistant_message",
       )
       .map((m) => {
         const role = m.type === "user_message" ? "user" : "assistant";
-        const text =
-          (m.message as { content?: string } | undefined)?.content ?? "";
-        return { role, text };
+        // Hume streams messages with a `message` object that has `content`.
+        const content =
+          (m as unknown as { message?: { content?: string } }).message
+            ?.content ?? "";
+        return { role, text: content };
       })
       .filter((l) => l.text.trim().length > 0);
   }, [messages]);
@@ -218,7 +208,14 @@ function Call({
   const start = async () => {
     setConnectError(null);
     try {
-      await connect();
+      await connect({
+        auth: { type: "accessToken", value: accessToken },
+        ...(session.configId ? { configId: session.configId } : {}),
+        sessionSettings: {
+          type: "session_settings",
+          systemPrompt: session.systemPrompt,
+        },
+      });
     } catch (e) {
       const msg =
         e instanceof Error ? e.message : "Could not connect to Hume EVI.";
@@ -272,7 +269,6 @@ function Call({
       difficulty={"neutral"}
       onEnd={onEnd}
     >
-      {/* Character card */}
       <div className="flex flex-col items-center gap-3">
         <div
           className={cn(
@@ -333,7 +329,6 @@ function Call({
         </div>
       ) : null}
 
-      {/* Controls */}
       <div className="flex items-center gap-3">
         {!isLive && !isConnecting ? (
           <Button size="lg" onClick={start} className="gap-2">
@@ -374,7 +369,6 @@ function Call({
         ) : null}
       </div>
 
-      {/* Live transcript */}
       {lines.length > 0 ? (
         <div className="mt-4 w-full max-w-2xl">
           <div className="mb-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
@@ -407,7 +401,6 @@ function Call({
         </div>
       ) : null}
 
-      {/* End & debrief */}
       <div className="absolute inset-x-0 bottom-0 border-t border-border bg-card px-6 py-3">
         <div className="mx-auto flex max-w-3xl items-center justify-between gap-2">
           <div className="text-xs text-muted-foreground">
@@ -432,10 +425,6 @@ function Call({
   );
 }
 
-/**
- * Scene shell (header + centered body). Kept as its own component so the
- * pre-connect / error / live states all render inside the same frame.
- */
 function SceneShell({
   scenario,
   difficulty,
