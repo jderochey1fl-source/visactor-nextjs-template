@@ -13,7 +13,6 @@ import {
   TriangleAlert,
 } from "lucide-react";
 import { useMemo, useState } from "react";
-import { ladderStages } from "@/data/ladder";
 import { objectionCategories, objections } from "@/data/objections";
 import {
   playbookCategoryLabel,
@@ -31,6 +30,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
+import { FourDecisionsPanel } from "./four-decisions-panel";
 
 const categoryLabel: Record<Objection["category"], string> = Object.fromEntries(
   objectionCategories.map((c) => [c.key, c.label]),
@@ -95,11 +95,11 @@ export function PlaybookBrowser() {
   };
 
   return (
-    <Tabs defaultValue="campaign" className="flex flex-col gap-5">
+    <Tabs defaultValue="decisions" className="flex flex-col gap-5">
       <TabsList>
+        <TabsTrigger value="decisions">Four Decisions</TabsTrigger>
         <TabsTrigger value="campaign">Campaign Playbook</TabsTrigger>
         <TabsTrigger value="objections">Objections</TabsTrigger>
-        <TabsTrigger value="stages">LADDER stages</TabsTrigger>
       </TabsList>
 
       <TabsContent value="campaign" className="flex flex-col gap-4">
@@ -212,50 +212,12 @@ export function PlaybookBrowser() {
         )}
       </TabsContent>
 
-      <TabsContent value="stages" className="flex flex-col gap-3">
-        {ladderStages.map((s, idx) => (
-          <div
-            key={s.key}
-            className="flex flex-col gap-3 rounded-lg border border-border bg-card p-5"
-          >
-            <div className="flex items-start gap-4">
-              <span
-                className={cn(
-                  "flex h-10 w-10 shrink-0 items-center justify-center rounded-md font-mono text-lg font-bold text-primary-foreground",
-                  accentByIndex[idx] ?? "bg-primary",
-                )}
-              >
-                {s.letter}
-              </span>
-              <div className="flex min-w-0 flex-col gap-1">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-lg font-semibold tracking-tight">
-                    {s.name}
-                  </h3>
-                  <Badge variant="muted" className="font-mono">
-                    stage {s.order}
-                  </Badge>
-                </div>
-                <p className="text-sm leading-relaxed text-muted-foreground">
-                  {s.description}
-                </p>
-              </div>
-            </div>
-          </div>
-        ))}
+      <TabsContent value="decisions">
+        <FourDecisionsPanel />
       </TabsContent>
     </Tabs>
   );
 }
-
-const accentByIndex = [
-  "bg-primary",
-  "bg-primary/90",
-  "bg-primary/80",
-  "bg-hot/80",
-  "bg-hot/90",
-  "bg-success",
-];
 
 function CategoryChip({
   label,
