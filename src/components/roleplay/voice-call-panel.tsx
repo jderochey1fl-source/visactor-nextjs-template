@@ -80,7 +80,10 @@ export function VoiceCallPanel(props: Props) {
           );
         }
         if (!sessionRes.ok) {
-          throw new Error("Could not build the Hume session prompt.");
+          const body = await sessionRes.json().catch(() => ({}));
+          throw new Error(
+            body?.error ?? "Could not build the Hume session prompt.",
+          );
         }
 
         const { accessToken: token } = (await tokenRes.json()) as {

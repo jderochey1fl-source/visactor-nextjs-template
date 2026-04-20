@@ -46,8 +46,39 @@ export async function POST(req: Request) {
     // Pick the Hume config that matches the persona's voice gender when the
     // AI is playing the buyer. When the AI plays the rep (user_is_buyer
     // mode), we use the default female config since the rep is us either way.
-    const femaleConfigId = process.env.HUME_CONFIG ?? null;
-    const maleConfigId = process.env.HUME_CONFIG_MALE ?? null;
+    //
+    // Hume config IDs are UUIDs. If someone pasted a system prompt or
+    // anything else into the env var, fail fast with a readable error
+    // instead of 400'ing inside the Hume websocket with an opaque message.
+    const UUID_RE =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    const sanitize = (raw: string | undefined): string | null => {
+      if (!raw) return null;
+      const trimmed = raw.trim();
+      return UUID_RE.test(trimmed) ? trimmed : null;
+    };
+
+    const femaleConfigId = sanitize(process.env.HUME_CONFIG);
+    const maleConfigId = sanitize(process.env.HUME_CONFIG_MALE);
+
+    if (process.env.HUME_CONFIG && !femaleConfigId) {
+      return NextResponse.json(
+        {
+          error:
+            "HUME_CONFIG is set but is not a valid UUID. Paste only the config ID from the Hume dashboard (e.g. 'f66f...'), not the system prompt.",
+        },
+        { status: 500 },
+      );
+    }
+    if (process.env.HUME_CONFIG_MALE && !maleConfigId) {
+      return NextResponse.json(
+        {
+          error:
+            "HUME_CONFIG_MALE is set but is not a valid UUID. Paste only the config ID from the Hume dashboard (e.g. '6358dc46-...'), not the system prompt.",
+        },
+        { status: 500 },
+      );
+    }
 
     let configId: string | null = femaleConfigId;
     if (mode === "user_is_rep" && persona.voiceGender === "male") {
