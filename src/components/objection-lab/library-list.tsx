@@ -16,8 +16,8 @@ const CATEGORY_LABEL: Record<ObjectionCategory, string> = {
   price: "Price",
   timing: "Timing",
   trust: "Trust",
-  spouse: "Spouse",
-  insurance: "Insurance",
+  authority: "Authority",
+  integration: "Integration",
   competitor: "Competitor",
   process: "Process",
 };

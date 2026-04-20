@@ -2,9 +2,9 @@ import {
   CheckCircle2,
   FileText,
   MessageSquare,
+  Monitor,
   Move,
   Phone,
-  Wrench,
 } from "lucide-react";
 import { activity } from "@/data/deals";
 import { stageByKey } from "@/data/ladder";
@@ -15,7 +15,7 @@ const iconByType: Record<ActivityEvent["type"], React.ComponentType<{ className?
     signed: CheckCircle2,
     stage_move: Move,
     proposal: FileText,
-    inspection: Wrench,
+    demo: Monitor,
     note: MessageSquare,
     call: Phone,
   };
@@ -24,7 +24,7 @@ const colorByType: Record<ActivityEvent["type"], string> = {
   signed: "bg-success/10 text-success",
   stage_move: "bg-primary/10 text-primary",
   proposal: "bg-hot/10 text-hot",
-  inspection: "bg-warning/15 text-warning",
+  demo: "bg-warning/15 text-warning",
   note: "bg-muted text-muted-foreground",
   call: "bg-secondary text-secondary-foreground",
 };

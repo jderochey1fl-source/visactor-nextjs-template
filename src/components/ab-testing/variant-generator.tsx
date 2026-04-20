@@ -36,7 +36,7 @@ const VARIABLE_HINT: Record<TestVariable, string> = {
 
 export function VariantGenerator({ variable, currentText, onApply }: Props) {
   const [context, setContext] = useState<string>(
-    "Roofing cold outreach to homeowners / property managers.",
+    "Ladder SaaS outbound to mid-size US roofing companies (25-200 employees). Buyers are Owners, VPs of Sales, or Sales Managers. Pain = 90-day sales rep washout + canvass waste.",
   );
   const [current, setCurrent] = useState<string>(currentText);
   const [variants, setVariants] = useState<Variant[] | null>(null);
@@ -98,7 +98,7 @@ export function VariantGenerator({ variable, currentText, onApply }: Props) {
             id="gen-context"
             value={context}
             onChange={(e) => setContext(e.target.value)}
-            placeholder="e.g. Roofing to insurance-claim homeowners post-storm"
+            placeholder="e.g. Ladder SmartHire to TX roofing-company VPs of Sales"
           />
         </div>
         <div className="flex flex-col gap-1.5">

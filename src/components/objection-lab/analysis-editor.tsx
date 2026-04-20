@@ -32,8 +32,8 @@ const CATEGORIES: { value: ObjectionCategory; label: string }[] = [
   { value: "price", label: "Price" },
   { value: "timing", label: "Timing" },
   { value: "trust", label: "Trust" },
-  { value: "spouse", label: "Spouse / Partner" },
-  { value: "insurance", label: "Insurance" },
+  { value: "authority", label: "Authority" },
+  { value: "integration", label: "Integration" },
   { value: "competitor", label: "Competitor" },
   { value: "process", label: "Process" },
 ];

@@ -122,7 +122,7 @@ export function ABTestingLab() {
               id="test-name"
               value={testName}
               onChange={(e) => setTestName(e.target.value)}
-              placeholder="e.g. Opening line — Q2 storm campaign"
+              placeholder="e.g. Opening line — SmartHire to TX roofing VPs"
             />
           </div>
           <div className="flex flex-col gap-1.5">

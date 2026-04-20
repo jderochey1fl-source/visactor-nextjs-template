@@ -128,72 +128,72 @@ export function CallPrepHypothesis() {
       <div className="grid grid-cols-1 gap-5 laptop:grid-cols-2">
         <div className="flex flex-col gap-4">
           <div className="grid grid-cols-1 gap-3 laptop:grid-cols-2">
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="hp-company">Company *</Label>
-              <Input
-                id="hp-company"
-                placeholder="Ridgeline Roofing"
-                value={fields.company}
-                onChange={(e) => update("company", e.target.value)}
-              />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="hp-prospect-name">Prospect</Label>
-              <Input
-                id="hp-prospect-name"
-                placeholder="Maria Alvarez"
-                value={fields.prospectName}
-                onChange={(e) => update("prospectName", e.target.value)}
-              />
-            </div>
-          </div>
-
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="hp-role">Role (optional)</Label>
+            <Label htmlFor="hp-company">Company *</Label>
             <Input
-              id="hp-role"
-              placeholder="Owner / GM / VP Ops"
-              value={fields.prospectRole}
-              onChange={(e) => update("prospectRole", e.target.value)}
+              id="hp-company"
+              placeholder="Crestline Roofing"
+              value={fields.company}
+              onChange={(e) => update("company", e.target.value)}
             />
           </div>
-
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="hp-challenge">Primary challenge *</Label>
+            <Label htmlFor="hp-prospect-name">Prospect</Label>
             <Input
-              id="hp-challenge"
-              placeholder="slowing lead-to-install cycle from 21 to 45 days"
-              value={fields.challenge}
-              onChange={(e) => update("challenge", e.target.value)}
+              id="hp-prospect-name"
+              placeholder="Derek Hollis"
+              value={fields.prospectName}
+              onChange={(e) => update("prospectName", e.target.value)}
             />
-            <p className="text-xs text-muted-foreground">
-              One specific pain — not three value props.
-            </p>
           </div>
+        </div>
 
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="hp-evidence">Evidence / signal *</Label>
-            <Textarea
-              id="hp-evidence"
-              rows={3}
-              placeholder="they pulled 3 permits last month vs. 9 the month before, and just added 2 sales reps on LinkedIn"
-              value={fields.evidence}
-              onChange={(e) => update("evidence", e.target.value)}
-            />
-            <p className="text-xs text-muted-foreground">
-              Why you think that — the research, trigger, or data point.
-            </p>
-          </div>
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="hp-role">Role (optional)</Label>
+          <Input
+            id="hp-role"
+            placeholder="Owner / VP Sales / Sales Manager"
+            value={fields.prospectRole}
+            onChange={(e) => update("prospectRole", e.target.value)}
+          />
+        </div>
 
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="hp-impact">Business impact (optional)</Label>
-            <Input
-              id="hp-impact"
-              placeholder="$180k in delayed revenue and 12 unhappy homeowners"
-              value={fields.businessImpact}
-              onChange={(e) => update("businessImpact", e.target.value)}
-            />
-          </div>
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="hp-challenge">Primary challenge *</Label>
+          <Input
+            id="hp-challenge"
+            placeholder="60% of sales hires wash out inside 90 days"
+            value={fields.challenge}
+            onChange={(e) => update("challenge", e.target.value)}
+          />
+          <p className="text-xs text-muted-foreground">
+            One specific pain — not three value props.
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="hp-evidence">Evidence / signal *</Label>
+          <Textarea
+            id="hp-evidence"
+            rows={3}
+            placeholder="4 canvasser openings live on Indeed for 30+ days, and 7 sales reps visible on LinkedIn as having left in the last 6 months"
+            value={fields.evidence}
+            onChange={(e) => update("evidence", e.target.value)}
+          />
+          <p className="text-xs text-muted-foreground">
+            Why you think that — the research, trigger, or data point.
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="hp-impact">Business impact (optional)</Label>
+          <Input
+            id="hp-impact"
+            placeholder="$90K in wasted hiring spend last year against 5 net retained reps"
+            value={fields.businessImpact}
+            onChange={(e) => update("businessImpact", e.target.value)}
+          />
+        </div>
         </div>
 
         <div className="flex flex-col gap-3">

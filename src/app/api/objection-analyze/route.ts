@@ -59,8 +59,8 @@ const analysisSchema = z.object({
       "price",
       "timing",
       "trust",
-      "spouse",
-      "insurance",
+      "authority",
+      "integration",
       "competitor",
       "process",
     ])
@@ -101,7 +101,7 @@ C) external-event — Only use REAL, documented events: scheduled pricing change
 D) confidence-question — Deploy this exact closing question or a close variation: "What would need to be true for you to feel completely confident moving forward?" Surface any remaining objection.
 E) transparent-counter — When the objection is a smokescreen or the other 4 levers would feel pushy, counter with honesty. Acknowledge the tradeoff, no pressure, no manufactured urgency. Never imply other buyers are interested unless they are.
 
-Also classify the objection into one of: price, timing, trust, spouse, insurance, competitor, process.
+Also classify the objection into one of: price, timing, trust, authority (co-decider or approval gate), integration (tech stack fit — Spotio, SalesRabbit, JobNimbus, AccuLynx, Leap, HubSpot), competitor, or process.
 
 Your output must sound like a spoken script — short sentences, contractions where natural, no "leveraging" or "synergies" or any other corporate language. The rep is going to say this tonight.`;
 

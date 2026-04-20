@@ -111,21 +111,37 @@ export function DealDrawer({
               </Badge>
               <Badge
                 variant={
-                  deal.prospect.propertyType === "commercial"
-                    ? "warning"
-                    : "secondary"
+                  deal.prospect.productFocus === "both"
+                    ? "default"
+                    : deal.prospect.productFocus === "smarthire"
+                      ? "secondary"
+                      : "warning"
                 }
               >
-                {deal.prospect.propertyType}
+                {deal.prospect.productFocus === "both"
+                  ? "SmartHire + SmartTerritory"
+                  : deal.prospect.productFocus === "smarthire"
+                    ? "SmartHire"
+                    : "SmartTerritory"}
               </Badge>
             </div>
             <h2 className="truncate text-xl font-semibold tracking-tight">
               {deal.prospect.name}
             </h2>
-            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-              <MapPin className="h-3.5 w-3.5" />
-              {deal.prospect.address}, {deal.prospect.city},{" "}
-              {deal.prospect.state}
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
+              {deal.prospect.contactName ? (
+                <span className="flex items-center gap-1.5">
+                  <User className="h-3.5 w-3.5" />
+                  {deal.prospect.contactName}
+                  {deal.prospect.contactTitle
+                    ? `, ${deal.prospect.contactTitle}`
+                    : null}
+                </span>
+              ) : null}
+              <span className="flex items-center gap-1.5">
+                <MapPin className="h-3.5 w-3.5" />
+                {deal.prospect.city}, {deal.prospect.state}
+              </span>
             </div>
           </div>
           <Button variant="ghost" size="icon" onClick={onClose} aria-label="Close">

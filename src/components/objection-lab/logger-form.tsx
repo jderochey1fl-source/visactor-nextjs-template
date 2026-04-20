@@ -128,7 +128,7 @@ export function LoggerForm({ onAnalyzed, onCancel }: Props) {
             id="stated"
             value={statedObjection}
             onChange={(e) => setStatedObjection(e.target.value)}
-            placeholder={`e.g. "Your guy down the street is $4,000 less."`}
+            placeholder={`e.g. "We just need more reps — we don't need another software subscription."`}
             rows={5}
             className="resize-none"
             required
@@ -157,7 +157,7 @@ export function LoggerForm({ onAnalyzed, onCancel }: Props) {
               id="dealName"
               value={dealName}
               onChange={(e) => setDealName(e.target.value)}
-              placeholder="Martinez · 1429 Oakridge"
+              placeholder="Crestline Roofing · Derek Hollis"
             />
           </div>
         </div>
@@ -178,7 +178,7 @@ export function LoggerForm({ onAnalyzed, onCancel }: Props) {
             id="product"
             value={product}
             onChange={(e) => setProduct(e.target.value)}
-            placeholder="Residential impact-resistant roof replacement"
+            placeholder="Ladder SmartHire + SmartTerritory"
             required
           />
         </div>
@@ -189,7 +189,7 @@ export function LoggerForm({ onAnalyzed, onCancel }: Props) {
             id="icp"
             value={icp}
             onChange={(e) => setIcp(e.target.value)}
-            placeholder="Homeowner, 45-65, suburban, recently impacted by hail, dual-decision household."
+            placeholder="Owner / VP Sales / Sales Director at a 25-200 employee US roofing company running a canvass or storm-restoration motion."
             rows={3}
             className="resize-none"
             required

@@ -14,19 +14,19 @@ type TabKey = "chat" | "library";
 const suggestedPrompts: { label: string; text: string }[] = [
   {
     label: "Stuck deal",
-    text: "Deal has been in Diagnose for 11 days. HOA board, we're bid 1 of 3, they keep 'thinking about it'. What's my next move?",
+    text: "Crestline Roofing has been in Diagnose for 11 days. VP Sales + GM on the call, we're one of two vendors they're evaluating, they keep asking for 'more data before the owner weighs in'. What's my next move?",
   },
   {
-    label: "Price objection",
-    text: "Prospect says: 'Your guy down the street is $4k less.' Apples-to-apples scope, but I want the script and the closing move.",
+    label: "Price pushback",
+    text: "Roofing-company owner says: 'SmartHire is more expensive than just posting on Indeed ourselves.' Give me the reframe, the script, and the closing move that pivots to washout cost.",
   },
   {
     label: "Gone dark",
-    text: "Design-stage deal. Was hot last week. Wife asked for time. Two touches since, no response. How do I re-open without burning the referral?",
+    text: "Design-stage deal with a TX roofing company, 80 employees. Was hot last week. GM asked for time to talk to the owner. Two touches since, no response. How do I re-open without burning the referral it came in on?",
   },
   {
-    label: "Insurance supplement",
-    text: "Adjuster missed valley ice & water and two pipe flashings. Walk me through building the supplement packet and the on-site re-inspection.",
+    label: "SmartTerritory fit",
+    text: "50-rep canvass-heavy roofing company in DFW. Already runs SalesRabbit. Owner thinks he has his territory motion dialed. How do I frame SmartTerritory so he hears it as compounding his wins, not replacing his GM?",
   },
 ];
 
@@ -230,9 +230,10 @@ function EmptyState({
           How can I help you close this deal?
         </h2>
         <p className="text-sm text-muted-foreground">
-          I coach on LADDER. I know roofing, insurance claims, and every
-          objection you&apos;ll hear tonight. Give me the deal — I&apos;ll give
-          you the move.
+          I coach on LADDER. I know Ladder&apos;s own motion — SmartHire and
+          SmartTerritory into mid-size US roofing companies — and every
+          objection you&apos;ll hear from a VP of Sales or Owner this week.
+          Give me the deal, I&apos;ll give you the move.
         </p>
       </div>
       <div className="grid w-full grid-cols-1 gap-2 tablet:grid-cols-2">

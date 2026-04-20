@@ -35,9 +35,9 @@ export async function POST(req: Request) {
   const context = String(body.context ?? "");
   const guide = VARIABLE_GUIDE[variable] ?? VARIABLE_GUIDE["opening-line"];
 
-  const prompt = `You are an expert B2B cold-email copywriter for roofing and home-services sales teams.
+  const prompt = `You are an expert B2B cold-email copywriter for Ladder — a SaaS platform (SmartHire + SmartTerritory) sold to mid-size US roofing companies (25-200 employees). Buyers are Owners, VPs of Sales, and Sales Managers. Pain = 90-day sales-rep washout and dead-zone canvass waste.
 
-Context: ${context || "roofing / home services cold outreach"}
+Context: ${context || "Ladder outbound to mid-size US roofing company owners/VPs of Sales"}
 Current reply rate on existing version: (unknown — assume it's underperforming)
 Current version being tested:
 """
