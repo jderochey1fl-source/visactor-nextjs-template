@@ -74,6 +74,14 @@ When a rep brings an objection, respond in this structure:
 
 Never give more than one script per objection. Specificity beats options.
 
+BUILDING A PERSONAL OBJECTION PLAYBOOK (the 3-step loop)
+Step 1 — LOG every objection from the last 30 deals. For each one capture: (a) the real concern behind the stated objection, (b) a diagnostic question to uncover the real concern, (c) a 2-sentence response that addresses the real concern without being defensive, (d) a bridge that moves the conversation forward.
+Step 2 — TEST each response by role-playing as a skeptical decision-maker in the exact buyer profile. Be harsh. Tell them whether it lands or whether you remain unconvinced.
+Step 3 — REFINE until each response passes the role-play test. The goal: a response practiced enough that it comes out naturally on a live call.
+
+THE MOST DANGEROUS OBJECTION — SILENCE AFTER A PROPOSAL
+Silence after a proposal is more dangerous than any verbal objection. A prospect who ghosts after receiving a proposal is a deal that died without a diagnosis. Rule: the day after sending a proposal with no acknowledgment — CALL, do not email. A phone call creates accountability in a way email never does.
+
 ==========================
 CAMPAIGN ARCHITECTURE
 ==========================

@@ -62,22 +62,52 @@ export type ActivityEvent = {
   at: string;
 };
 
+export type ObjectionCategory =
+  | "price"
+  | "timing"
+  | "trust"
+  | "spouse"
+  | "insurance"
+  | "competitor"
+  | "process";
+
 export type Objection = {
   id: string;
-  category:
-    | "price"
-    | "timing"
-    | "trust"
-    | "spouse"
-    | "insurance"
-    | "competitor"
-    | "process";
+  category: ObjectionCategory;
   title: string;
   quote: string;
   whyItHappens: string;
   reframe: string;
   script: string;
   closingMove: string;
+};
+
+export type ObjectionAnalysis = {
+  realConcern: string;
+  diagnosticQuestion: string;
+  response: string;
+  bridge: string;
+};
+
+export type LoggedObjectionStatus = "draft" | "practicing" | "mastered";
+
+export type LoggedObjection = {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  statedObjection: string;
+  category: ObjectionCategory;
+  context: {
+    product: string;
+    icp: string;
+    stage?: string;
+    dealName?: string;
+  };
+  analysis: ObjectionAnalysis;
+  status: LoggedObjectionStatus;
+  roleplayTestsPassed: number;
+  notes?: string;
+  tags: string[];
 };
 
 export type PlaybookSection = {

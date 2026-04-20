@@ -4,6 +4,7 @@ import {
   LayoutDashboard,
   type LucideIcon,
   Mail,
+  ShieldAlert,
   Sparkles,
   Telescope,
 } from "lucide-react";
@@ -56,6 +57,12 @@ export const navigations: Navigation[] = [
     name: "Email Generator",
     href: "/email-generator",
     description: "Full 6-touch LADDER sequence",
+  },
+  {
+    icon: ShieldAlert,
+    name: "Objection Lab",
+    href: "/objection-lab",
+    description: "Log, analyze, and role-play objections",
   },
   {
     icon: BookOpen,
