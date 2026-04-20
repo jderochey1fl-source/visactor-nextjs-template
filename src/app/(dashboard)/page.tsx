@@ -1,32 +1,52 @@
-import {
-  AverageTicketsCreated,
-  Conversions,
-  CustomerSatisfication,
-  Metrics,
-  TicketByChannels,
-} from "@/components/chart-blocks";
+import { ActivityFeed } from "@/components/command-center/activity-feed";
+import { CallPrepHypothesis } from "@/components/command-center/call-prep-hypothesis";
+import { FunnelCalculators } from "@/components/command-center/funnel-calculators";
+import { KpiGrid } from "@/components/command-center/kpi-grid";
+import { LadderFunnel } from "@/components/command-center/ladder-funnel";
+import { NextActions } from "@/components/command-center/next-actions";
+import { RevenueChart } from "@/components/command-center/revenue-chart";
+import { StageVelocity } from "@/components/command-center/stage-velocity";
 import Container from "@/components/container";
 
-export default function Home() {
+export default function CommandCenterPage() {
   return (
     <div>
-      <Metrics />
-      <div className="grid grid-cols-1 divide-y border-b border-border laptop:grid-cols-3 laptop:divide-x laptop:divide-y-0 laptop:divide-border">
-        <Container className="py-4 laptop:col-span-2">
-          <AverageTicketsCreated />
-        </Container>
-        <Container className="py-4 laptop:col-span-1">
-          <Conversions />
-        </Container>
-      </div>
-      <div className="grid grid-cols-1 divide-y border-b border-border laptop:grid-cols-2 laptop:divide-x laptop:divide-y-0 laptop:divide-border">
-        <Container className="py-4 laptop:col-span-1">
-          <TicketByChannels />
-        </Container>
-        <Container className="py-4 laptop:col-span-1">
-          <CustomerSatisfication />
-        </Container>
-      </div>
+      <KpiGrid />
+
+      <Container className="grid grid-cols-1 gap-6 border-b border-border py-6 laptop:grid-cols-3">
+        <section className="laptop:col-span-2">
+          <LadderFunnel />
+        </section>
+        <section className="laptop:col-span-1">
+          <StageVelocity />
+        </section>
+      </Container>
+
+      <Container
+        id="outbound-math"
+        className="border-b border-border bg-muted/30 py-6 scroll-mt-16"
+      >
+        <FunnelCalculators />
+      </Container>
+
+      <Container className="border-b border-border py-6">
+        <CallPrepHypothesis />
+      </Container>
+
+      <Container className="grid grid-cols-1 gap-6 border-b border-border py-6 laptop:grid-cols-3">
+        <section className="flex flex-col rounded-lg border border-border bg-card p-5 laptop:col-span-2">
+          <RevenueChart />
+        </section>
+        <section className="flex flex-col rounded-lg border border-border bg-card p-5 laptop:col-span-1">
+          <NextActions />
+        </section>
+      </Container>
+
+      <Container className="py-6">
+        <section className="rounded-lg border border-border bg-card p-5">
+          <ActivityFeed />
+        </section>
+      </Container>
     </div>
   );
 }
