@@ -40,20 +40,24 @@ export type SequenceInputs = {
   tone: "direct" | "warm" | "analytical";
 };
 
+/**
+ * Defaults wired to Ladder's actual ICP: mid-size roofing companies
+ * with rep churn and an active canvass motion. SmartHire angle by default.
+ */
 export const DEFAULT_SEQUENCE_INPUTS: SequenceInputs = {
-  icp: "VP of Sales at 50-200 person B2B SaaS companies that just raised Series B",
+  icp: "VP of Sales / Sales Director at mid-size US roofing companies (25-200 employees, $5M-$50M revenue) running a canvass motion on Spotio or SalesRabbit",
   triggerSignal:
-    "Posted 4 SDR job openings in the last 14 days on LinkedIn and company careers page",
+    "4+ active canvasser or sales rep postings on Indeed in the last 30 days, plus 5+ rep departures visible on LinkedIn in the last 6 months",
   problemStatement:
-    "SDR teams scaling past 10 reps consistently see ramp time blow past 90 days, costing a full quarter of quota production",
+    "60% of roofing sales hires quit in 90 days and each washout burns ~$11K in recruiting, onboarding, and ramp salary — and it compounds every quarter",
   outcome:
-    "Cut SDR ramp time from 90 days to 45 without adding enablement headcount",
-  prospectName: "Sarah Chen",
+    "Cut 90-day washout rate from 58% to 27% in the first quarter without adding recruiting headcount",
+  prospectName: "Derek Hollis",
   prospectTitle: "VP of Sales",
-  company: "Northwind",
+  company: "Crestline Roofing",
   senderName: "Alex Rivera",
-  senderCompany: "Ascend",
-  ctaPreference: "15-minute call Thursday or Friday",
+  senderCompany: "Ladder",
+  ctaPreference: "20-minute Ladder Fit Call Thursday or Friday",
   tone: "direct",
 };
 

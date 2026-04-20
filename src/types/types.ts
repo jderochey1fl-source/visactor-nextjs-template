@@ -4,7 +4,8 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
   size?: number;
 };
 
-// LADDER framework stages
+// LADDER framework stages - applied to Ladder's own B2B SaaS motion
+// selling SmartHire + SmartTerritory to mid-size roofing companies.
 export type LadderStage =
   | "locate"
   | "approach"
@@ -22,14 +23,36 @@ export type StageInfo = {
   order: number;
 };
 
+export type ProductFocus = "smarthire" | "smartterritory" | "both";
+
+export type DealSource =
+  | "outbound"
+  | "referral"
+  | "inbound"
+  | "event"
+  | "partner";
+
+/**
+ * A prospect is a ROOFING COMPANY — not a homeowner.
+ * Ladder sells to mid-size US roofing companies (25-200 employees, $5M-$50M).
+ */
 export type Prospect = {
   id: string;
+  /** Company name, e.g. "Crestline Roofing" */
   name: string;
-  address: string;
+  /** Primary contact at the company */
+  contactName?: string;
+  /** Contact's role / title */
+  contactTitle?: string;
+  /** HQ street address (optional) */
+  address?: string;
+  /** HQ city */
   city: string;
+  /** HQ state */
   state: string;
-  propertyType: "residential" | "commercial";
-  source: "storm" | "referral" | "canvass" | "inbound" | "partner";
+  /** Which Ladder product(s) the prospect is evaluating */
+  productFocus: ProductFocus;
+  source: DealSource;
   phone?: string;
   email?: string;
 };
@@ -38,6 +61,7 @@ export type Deal = {
   id: string;
   prospect: Prospect;
   stage: LadderStage;
+  /** Annual contract value in USD */
   value: number;
   owner: string;
   openedAt: string;
@@ -54,7 +78,7 @@ export type ActivityEvent = {
   id: string;
   dealId: string;
   prospectName: string;
-  type: "stage_move" | "note" | "call" | "inspection" | "proposal" | "signed";
+  type: "stage_move" | "note" | "call" | "demo" | "proposal" | "signed";
   from?: LadderStage;
   to?: LadderStage;
   owner: string;
@@ -66,8 +90,8 @@ export type ObjectionCategory =
   | "price"
   | "timing"
   | "trust"
-  | "spouse"
-  | "insurance"
+  | "authority"
+  | "integration"
   | "competitor"
   | "process";
 

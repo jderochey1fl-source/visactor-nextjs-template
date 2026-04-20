@@ -55,7 +55,7 @@ export const REBUTTAL_LEVERS: RebuttalLever[] = [
     description:
       "Pricing changes, cohort start dates, onboarding availability, material cost increases. Use them only when they are actually scheduled and documented.",
     example:
-      "Manufacturer is pushing through a 6% price increase on this shingle line April 1. Lock pricing this week and that change doesn't apply to your job.",
+      "Our Q2 onboarding cohort kicks off April 29 — after that the next seat opens mid-June. Lock this week and you're live before May storm season, not after it.",
     icon: Megaphone,
     colorClass: "text-hot",
   },

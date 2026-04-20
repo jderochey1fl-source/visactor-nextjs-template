@@ -38,20 +38,24 @@ export type FollowUpInputs = {
   tone: "direct" | "warm" | "analytical";
 };
 
+/**
+ * Defaults grounded in a realistic Ladder discovery call with a
+ * roofing-company VP of Sales — washout pain + canvass waste.
+ */
 export const DEFAULT_FOLLOW_UP_INPUTS: FollowUpInputs = {
-  prospectName: "Sarah Chen",
+  prospectName: "Derek Hollis",
   prospectTitle: "VP of Sales",
-  company: "Northwind",
+  company: "Crestline Roofing",
   meetingType: "discovery",
   meetingDate: "today",
   meetingNotes:
-    "Scaling from 8 to 20 SDRs by Q3. New hires are taking 4+ months to hit quota. Current enablement is a Google Doc her team maintains on the side. Board is asking about pipeline coverage for the H2 plan.",
+    "Hired 12 sales reps in 2025 — 7 quit inside 90 days, so the real hire count was 5. Canvassers are knocking ~175 doors per close, which Derek thinks should be under 100. Owner is asking for a plan before Q2 storm season. Runs Spotio + JobNimbus. Hiring spend was ~$110K last year against $44K of actual retained reps.",
   challenges:
-    "SDR ramp time, inconsistent messaging across new hires, enablement team has no bandwidth to build a real program",
+    "90-day sales-rep washout burning recruiting budget every quarter; canvassers wasting ~60% of each day on dead zones; pressure from Owner to fix both before May",
   nextStep:
-    "Send a Loom walkthrough of the onboarding module by Friday, regroup on a 30-min call Tuesday at 2pm CT",
+    "Send Ladder ROI calculator pre-populated with Crestline's 2025 hire count and canvass volume; schedule 30-min stakeholder review Tuesday at 2pm CT with Derek + GM",
   senderName: "Alex Rivera",
-  senderCompany: "Ascend",
+  senderCompany: "Ladder",
   tone: "direct",
 };
 

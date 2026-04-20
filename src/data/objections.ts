@@ -1,158 +1,173 @@
-import type { Objection } from "@/types/types";
+import type { Objection, ObjectionCategory } from "@/types/types";
 
+/**
+ * Ladder-specific objection library. Every objection is one a Ladder
+ * sales rep would hear from a roofing-company Owner, VP Sales, Sales
+ * Manager, or GM evaluating SmartHire and/or SmartTerritory.
+ */
 export const objections: Objection[] = [
   {
     id: "OBJ-001",
     category: "price",
-    title: "Your price is too high",
-    quote: "Your guy down the street is $4,000 less.",
+    title: "$499+/mo is a lot for hiring software",
+    quote: "$499 a seat, plus SmartTerritory on top? That's real money.",
     whyItHappens:
-      "The prospect has been anchored on a stripped-down scope or a lowball bid. They don't yet see the delta in materials, warranty, install quality, or crew.",
+      "They're anchoring on the sticker price without running it against their actual washout cost. Most roofing companies have never math-ed their bad-hire spend line by line.",
     reframe:
-      "Price is a number. Cost is what you actually pay over time. The cheaper bid almost never installs the same system — it's apples to something else.",
+      "Price is a number. Cost is what bad hires and dead-zone knocks are already billing you every month — whether you see it or not.",
     script:
-      "Totally fair to compare. Can I ask — does their bid include decking replacement as needed, ice & water in the valleys, synthetic underlayment, and the manufacturer-backed 50-year system warranty? Because if it doesn't, the $4,000 gap is the delta between those two systems — not between two companies doing the same job.",
+      "Fair. Let me make the math boring for a second. Industry 90-day washout on roofing sales hires is 55-65%. Per washout — wasted recruiting, onboarding, ramp salary — is roughly $11K. If you hired 8 reps last year and lost 4 of them, that's $44K you already spent and didn't book. SmartHire runs about $6K a year for that same seat. One avoided washout covers it.",
     closingMove:
-      "Let's put both bids side by side line-for-line. If theirs truly matches ours apples-to-apples, I'll meet their number. Fair?",
+      "Pull up their actual hire count from the last 12 months and run it live in the ROI calculator. Numbers close where pitches don't.",
   },
   {
     id: "OBJ-002",
     category: "timing",
-    title: "We need to think about it",
-    quote: "Let us sleep on it and we'll get back to you.",
+    title: "We'll look at this next quarter",
+    quote: "Storm season just hit, we can't change anything right now.",
     whyItHappens:
-      "Either (a) they don't have a real objection but haven't been given a reason to act, or (b) there's an unspoken concern — usually money, spouse alignment, or trust — they're too polite to name.",
+      "Legitimate surface concern — peak season is peak operational load. But the real cost: they're hiring fastest and wasting canvass time hardest during the exact window they say they don't have time for Ladder.",
     reframe:
-      "\"Think about it\" isn't a decision. Name the actual concern so you can solve it, not defer it.",
+      "Storm season is exactly when bad hiring and dead-zone knocks cost the most. Waiting is the expensive option, not the safe one.",
     script:
-      "I hear you — this isn't a small decision. Most folks who tell me they want to think about it are really weighing one of three things: the investment, whether the timing works for the family, or whether we're the right crew. Which of those is closest for you?",
+      "That's the moment SmartHire and SmartTerritory save the most — you're hiring under pressure and your canvassers are burning daylight right now. Onboarding is 10 days. If we start Monday, you're live before your May push. If we wait till Q3, you've already paid for another bad hire cycle and missed the storm window.",
     closingMove:
-      "If they name it, you solve it now. If they don't, schedule a specific time — 48 hours — for a decision call. Never leave it open.",
+      "Offer a Monday kickoff and a specific live date: 'April 28 you're live.' Concrete beats vague.",
   },
   {
     id: "OBJ-003",
-    category: "spouse",
-    title: "I need to talk to my spouse",
-    quote: "My wife/husband isn't here — I need to run it by them.",
+    category: "authority",
+    title: "My GM / co-owner needs to be on this",
+    quote: "My GM handles canvass routes — I can't sign this without him.",
     whyItHappens:
-      "Legitimate 60% of the time. The other 40% it's a polite delay tactic. Either way, never present without both decision-makers present — this is a prevention problem, not an objection problem.",
+      "Real 70% of the time. The other 30% it's a soft brush-off. Either way, the answer is the same: get both decision-makers on one call, don't play telephone.",
     reframe:
-      "Great — decisions this size should be made together. Let's not make you play telephone.",
+      "Decisions this size should be made together. Don't make me pitch it twice and hope it translates right.",
     script:
-      "Absolutely, this is a both-of-you decision. Rather than me leave a folder and hope it gets translated right, can we get them on a quick 10-minute call right now? Or I'll come back tomorrow evening when you're both home — whichever works.",
+      "Completely — SmartTerritory is only as good as the GM running canvass, so he should be in the room. Rather than me send a deck and hope it survives the handoff, can we get the three of us on a 20-minute call this week? I'll run the hiring-waste and knocks-per-close math on your actual numbers, he'll see the tool, and you'll leave with a clear yes or no.",
     closingMove:
-      "Book the re-present with both present. Do NOT leave the written estimate as a drop-off.",
+      "Book the joint call before you leave the current one. Do NOT email the deck and wait.",
   },
   {
     id: "OBJ-004",
     category: "trust",
-    title: "I've never heard of your company",
-    quote: "How do I know you'll still be here when I need a warranty call?",
+    title: "I've never heard of Ladder",
+    quote: "You're a newer company — how do I know you'll be around in 2 years?",
     whyItHappens:
-      "Storm-chaser PTSD. They've seen fly-by-night roofers. They need proof of permanence, not sales language.",
+      "Every roofing owner has been burned by a vendor who disappeared mid-contract. They need proof of permanence, not adjectives.",
     reframe:
-      "Trust is earned with specifics, not adjectives. Show don't tell.",
+      "Trust is earned with specifics, not with a brand story. Show the work.",
     script:
-      "Completely fair — there are a lot of roofers who show up after a storm and disappear. Three things that matter: we've been licensed at this address since [year]; here's our Google reviews pulled up right now — that's [N] reviews averaging [X] stars; and the warranty isn't mine, it's the manufacturer's — they stand behind it whether I'm here or not. Want me to show you three jobs we installed in this zip code last year?",
+      "Fair question. Three specifics: we're funded through 2028, our renewal rate on mid-size roofers is 94%, and three companies your size in TX will take a reference call this week — Apex, Summit, and Crestline's GM. I'll introduce you to whichever one looks closest to your business. You hear it from them, not from me.",
     closingMove:
-      "Open Google Maps, show three nearby installs you can drive them past. Local proof crushes skepticism.",
+      "Offer the reference call by name, before they ask. Warm-intro the one most relevant to their situation.",
   },
   {
     id: "OBJ-005",
-    category: "insurance",
-    title: "I'm waiting on the adjuster",
-    quote: "The insurance company hasn't approved the full scope yet.",
+    category: "integration",
+    title: "Will this actually work with our stack?",
+    quote:
+      "We're on Spotio and JobNimbus already. The last 'integration' took 4 months.",
     whyItHappens:
-      "Adjuster lowballed or missed line items. The homeowner feels stuck between us and them.",
+      "They've been burned by vendors whose 'integrations' were a zap and a prayer. They need to see the integration work, not hear that it does.",
     reframe:
-      "You don't work for the insurance company — you work for the homeowner. Your job is to get them paid fairly for the damage they actually have.",
+      "The integration question isn't theoretical — it's testable. Let's test it.",
     script:
-      "You don't have to fight them — that's what we do. I'll prepare a supplement packet with photos, measurements, and Xactimate-aligned line items for the things they missed. We meet the adjuster on-site, walk the roof together, and 8 out of 10 times they approve it on the spot. You don't write a bigger check — the carrier does.",
+      "SmartTerritory pushes daily priority routes directly into Spotio — same app your canvassers open every morning, no training. SmartHire writes hires into JobNimbus with Owner, Stage, and Fit Score. I can show both working end-to-end in 10 minutes on a screen share. If either doesn't fit your actual setup, I'll tell you straight and we stop.",
     closingMove:
-      "Book the re-inspection with the adjuster THIS week. Momentum dies in insurance delays.",
+      "Offer the live integration demo this week. Nothing kills integration FUD faster than watching it work.",
   },
   {
     id: "OBJ-006",
     category: "competitor",
-    title: "We're getting other bids",
-    quote: "We're getting three bids before we decide.",
+    title: "We're also looking at [competitor]",
+    quote: "We're demoing a couple of other hiring tools this month.",
     whyItHappens:
-      "Responsible homeowner behavior, often HOA-mandated. Not a real objection — a process. Your job is to be the bid that sets the standard the others are measured against.",
+      "Responsible buyer behavior, not a real objection. Your job: be the proposal the others are measured against.",
     reframe:
-      "Fine. Be the reference bid. Go so thorough and specific they have nothing to compare.",
+      "Good. Be the reference proposal. The deeper ours goes, the weaker theirs will feel.",
     script:
-      "Smart — I'd do the same. Two asks: first, can I be the last bid you see? The detail in ours usually sets the bar, and the other bids tend to collapse against it. Second, when you see the others, send me theirs — I'll tell you exactly where their scope is thinner. You'll end up with a better roof either way.",
+      "Smart — I'd do the same. Two asks: first, let ours be the last one you evaluate. The retention math and the integration work we put on paper usually sets the bar. Second, when you see the others, send me what they quote and what they promise on integration — I'll tell you exactly where their proposal is thin. Either way you end up with a better decision.",
     closingMove:
-      "Set the next-step date. 'Let's talk Thursday after you've seen the other two.' Lock the callback.",
+      "Lock a specific follow-up date after their other evals. 'Let's talk Thursday after you've seen them both.'",
   },
   {
     id: "OBJ-007",
     category: "process",
-    title: "Can you just drop off the estimate?",
-    quote: "Just leave the estimate and I'll call you if we're interested.",
+    title: "Just send us the pricing",
+    quote: "Can you just email me the pricing and I'll review internally?",
     whyItHappens:
-      "They're trying to avoid a sales conversation, which means the conversation didn't build enough value. This is a design failure, not an objection — but you can still recover.",
+      "They're trying to avoid the conversation because the earlier call didn't build enough value. Emailed pricing = dead pricing.",
     reframe:
-      "An estimate without a walkthrough is a piece of paper. An estimate with a story is a decision.",
+      "An emailed quote is a number without a reason. A walked quote is a decision.",
     script:
-      "I could — but I'd be doing you a disservice. A written estimate shows numbers, not the why behind them. Twenty minutes side-by-side at your kitchen table and you'll actually understand what you're buying and why it's priced the way it is. When does your schedule work — evening or weekend?",
+      "I could — but I'd be doing you a disservice. The number on its own doesn't show the washout-cost math or what the SmartTerritory zip overlay will actually look like on your neighborhoods. 15 minutes side-by-side and you'll have the answer, not just the price. What evening or early morning works this week?",
     closingMove:
-      "If they insist: send the estimate AND schedule a 15-min call to walk it live. Never just drop.",
+      "If they insist, send the pricing AND schedule a 15-min walkthrough. Never just drop.",
   },
   {
     id: "OBJ-008",
     category: "timing",
-    title: "We'll do it next year",
-    quote: "Our roof is fine for another year or two.",
+    title: "We'll revisit in a few months",
+    quote: "Circle back with us in the fall.",
     whyItHappens:
-      "Either (a) they don't see urgency, (b) they can't afford it right now, or (c) they hope the problem self-resolves. The decision frame is short-term thinking vs. total cost.",
+      "Either they don't see urgency, they can't prioritize it this quarter, or they hope the problem resolves itself. Cost of delay is usually invisible to them.",
     reframe:
-      "Roofs don't get cheaper to replace. They get more expensive — materials, labor, and the damage underneath.",
+      "Roofing hire costs and dead-zone canvass time don't get cheaper — they compound.",
     script:
-      "I hear you, and I'd never pressure you into a roof you don't need. But here's the math — deferring a replacement one year typically costs 6–9% more in materials and labor, and that's before any interior damage from a bad season. If the budget's the issue, let's talk about financing that lets you stop the damage clock while spreading the cost. That's a different conversation than 'do we spend $X today?'",
+      "I hear you, and I won't chase. But the math runs the other way: every month you wait, you hire another 1-2 reps who have a 60% chance of washing out, and your canvassers spend another 22 working days on doors that won't buy. A 3-month delay typically costs a mid-size roofer $18-30K in washout and lost canvass hours. If that's okay, we wait. If it's not, let's find a 20-minute window this week.",
     closingMove:
-      "Introduce financing as a timing-shift, not a price-shift. Re-anchor: 'Stop the damage now, pay for it over time.'",
+      "Quantify the delay cost in THEIR numbers, then re-ask for a specific 20-minute slot.",
   },
   {
     id: "OBJ-009",
     category: "trust",
-    title: "Are you a storm chaser?",
-    quote: "You knocked on my door right after the storm — are you even local?",
+    title: "How do we know this actually works?",
+    quote:
+      "Every vendor says they'll fix hiring. What makes you different?",
     whyItHappens:
-      "Valid skepticism. The homeowner wants to confirm you'll be around for warranty claims, not just to write a check.",
+      "They've been sold 'revolutionary' platforms before. They need evidence, not adjectives.",
     reframe:
-      "Lean in. Don't apologize for canvassing — professionalize it.",
+      "Lean into the fatigue. Don't argue you're different — prove it with numbers they can verify.",
     script:
-      "Totally fair question. Yes, we canvass after storms — because FEMA and the insurance industry say 60% of hail damage is missed by homeowners until it leaks 6 months later. No, we're not fly-by-night — our office is [address], we've been here since [year], and every warranty claim comes through the same local number you dial today. Would it help if I showed you three other jobs we've done in this neighborhood you can drive past?",
+      "Fatigue is fair. Three things, all verifiable: SmartHire customer-average 90-day washout drops from 58% to 27% in Q1 — that's from our monthly health data, not a case study. SmartTerritory reduces knocks-per-close by 32% in week two on average. And we don't pitch testimonials — I'll set up a call this week with a peer roofer your size so you hear the number directly from them.",
     closingMove:
-      "Immediately pull up Google Maps with pins on recent local installs. Permanence is proven visually.",
+      "Immediately offer the peer reference call with a named company at their size and motion.",
   },
   {
     id: "OBJ-010",
     category: "price",
-    title: "Can you come down on price?",
-    quote: "Is there any flexibility on the number?",
+    title: "Can you discount?",
+    quote: "If we sign today, can you come down 20%?",
     whyItHappens:
-      "Natural negotiation reflex. Most people ask. Some mean it. Your job: don't discount mindlessly — trade.",
+      "Natural negotiation reflex. Most owners ask. Some mean it. Your job: don't discount — trade.",
     reframe:
       "Discounts teach the market your price isn't real. Trade instead.",
     script:
-      "I never discount — but I trade. If you can help me three ways, I can sharpen this: sign today so I can lock in today's material pricing, let us put a sign in your yard for 30 days, and introduce us to two neighbors. That's roughly [$X] of value to us, so I can meet you at [price]. Deal?",
+      "I never discount — but I trade. If you can help me three ways, I can sharpen this: sign a 12-month instead of month-to-month, let us use your 90-day results as a named case study, and introduce us to two peer roofers in TX or OK. That's roughly $9K of value on our end, so I can meet you at [adjusted number]. Deal?",
     closingMove:
-      "Lead with: 'I never discount — but I trade.' It instantly reframes the entire negotiation.",
+      "Lead with 'I never discount — but I trade.' Reframes the entire negotiation in one line.",
   },
 ];
 
 export const objectionCategories: {
-  key: Objection["category"];
+  key: ObjectionCategory;
   label: string;
   blurb: string;
 }[] = [
-  { key: "price", label: "Price", blurb: "Reframe price vs. cost" },
-  { key: "timing", label: "Timing", blurb: "Urgency without pressure" },
-  { key: "trust", label: "Trust", blurb: "Prove permanence" },
-  { key: "spouse", label: "Spouse / Partner", blurb: "Two-decider frame" },
-  { key: "insurance", label: "Insurance", blurb: "Work the claim" },
-  { key: "competitor", label: "Competitor", blurb: "Be the reference bid" },
-  { key: "process", label: "Process", blurb: "Never just drop an estimate" },
+  { key: "price", label: "Price", blurb: "Reframe price vs. washout cost" },
+  { key: "timing", label: "Timing", blurb: "Cost of delay, not pressure" },
+  { key: "trust", label: "Trust", blurb: "Specifics over adjectives" },
+  {
+    key: "authority",
+    label: "Authority",
+    blurb: "Co-decider alignment (Owner + GM)",
+  },
+  {
+    key: "integration",
+    label: "Integration",
+    blurb: "Works with Spotio, JobNimbus, AccuLynx",
+  },
+  { key: "competitor", label: "Competitor", blurb: "Be the reference proposal" },
+  { key: "process", label: "Process", blurb: "Never just email pricing" },
 ];
