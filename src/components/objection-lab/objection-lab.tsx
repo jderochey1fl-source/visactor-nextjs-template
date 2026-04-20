@@ -11,6 +11,7 @@ import { useState } from "react";
 import { AnalysisEditor } from "@/components/objection-lab/analysis-editor";
 import { LibraryList } from "@/components/objection-lab/library-list";
 import { LoggerForm } from "@/components/objection-lab/logger-form";
+import { TopRebuttalFactors } from "@/components/objection-lab/top-rebuttal-factors";
 import { Button } from "@/components/ui/button";
 import { useLoggedObjections } from "@/lib/objection-store";
 import { cn } from "@/lib/utils";
@@ -39,6 +40,8 @@ export function ObjectionLab() {
       />
 
       <DangerCallout />
+
+      <TopRebuttalFactors />
 
       <main className="mx-auto w-full max-w-6xl px-6 py-8">
         {view.mode === "library" ? (

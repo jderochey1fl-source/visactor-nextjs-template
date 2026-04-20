@@ -82,11 +82,25 @@ export type Objection = {
   closingMove: string;
 };
 
+export type RebuttalLeverKey =
+  | "their-timeline"
+  | "implementation-reality"
+  | "external-event"
+  | "confidence-question"
+  | "transparent-counter";
+
+export type RebuttalOption = {
+  lever: RebuttalLeverKey;
+  headline: string;
+  script: string;
+};
+
 export type ObjectionAnalysis = {
   realConcern: string;
   diagnosticQuestion: string;
   response: string;
   bridge: string;
+  rebuttals: RebuttalOption[];
 };
 
 export type LoggedObjectionStatus = "draft" | "practicing" | "mastered";

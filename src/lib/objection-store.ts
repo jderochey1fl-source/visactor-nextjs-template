@@ -20,7 +20,17 @@ function readAll(): LoggedObjection[] {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw) as LoggedObjection[];
-    return Array.isArray(parsed) ? parsed : [];
+    if (!Array.isArray(parsed)) return [];
+    // Backfill: older objections saved before rebuttals were introduced.
+    return parsed.map((o) => ({
+      ...o,
+      analysis: {
+        ...o.analysis,
+        rebuttals: Array.isArray(o.analysis?.rebuttals)
+          ? o.analysis.rebuttals
+          : [],
+      },
+    }));
   } catch {
     return [];
   }

@@ -88,6 +88,9 @@ export function LoggerForm({ onAnalyzed, onCancel }: Props) {
           diagnosticQuestion: analysis.diagnosticQuestion,
           response: analysis.response,
           bridge: analysis.bridge,
+          rebuttals: Array.isArray(analysis.rebuttals)
+            ? analysis.rebuttals
+            : [],
         },
         status: "draft",
         roleplayTestsPassed: 0,

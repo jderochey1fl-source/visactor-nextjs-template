@@ -12,17 +12,20 @@ import {
   Trash2,
 } from "lucide-react";
 import { useState } from "react";
+import { RebuttalOptions } from "@/components/objection-lab/rebuttal-options";
 import { RoleplayPanel } from "@/components/objection-lab/roleplay-panel";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { leverByKey } from "@/data/rebuttal-levers";
 import { cn } from "@/lib/utils";
 import type {
   LoggedObjection,
   LoggedObjectionStatus,
   ObjectionCategory,
+  RebuttalOption,
 } from "@/types/types";
 
 const CATEGORIES: { value: ObjectionCategory; label: string }[] = [
@@ -76,6 +79,20 @@ export function AnalysisEditor({
   }
 
   function copyAll() {
+    const rebuttalsBlock =
+      local.analysis.rebuttals && local.analysis.rebuttals.length > 0
+        ? [
+            ``,
+            `Rebuttal options:`,
+            ...local.analysis.rebuttals.map((r) => {
+              const lever = leverByKey(r.lever);
+              return [
+                `  [${lever.name}${r.headline ? ` — ${r.headline}` : ""}]`,
+                `  ${r.script}`,
+              ].join("\n");
+            }),
+          ]
+        : [];
     const block = [
       `OBJECTION: ${local.statedObjection}`,
       ``,
@@ -83,8 +100,16 @@ export function AnalysisEditor({
       `Diagnostic question: ${local.analysis.diagnosticQuestion}`,
       `Response: ${local.analysis.response}`,
       `Bridge: ${local.analysis.bridge}`,
+      ...rebuttalsBlock,
     ].join("\n");
     void navigator.clipboard.writeText(block);
+  }
+
+  function updateRebuttals(next: RebuttalOption[]) {
+    setLocal((prev) => ({
+      ...prev,
+      analysis: { ...prev.analysis, rebuttals: next },
+    }));
   }
 
   return (
@@ -217,6 +242,11 @@ export function AnalysisEditor({
               className="resize-none"
             />
           </PartCard>
+
+          <RebuttalOptions
+            value={local.analysis.rebuttals ?? []}
+            onChange={updateRebuttals}
+          />
 
           <div className="grid grid-cols-1 gap-4 rounded-lg border border-border bg-card p-5 tablet:grid-cols-2">
             <div className="flex flex-col gap-2">
