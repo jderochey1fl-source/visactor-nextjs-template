@@ -1,4 +1,5 @@
 import { ActivityFeed } from "@/components/command-center/activity-feed";
+import { FunnelCalculators } from "@/components/command-center/funnel-calculators";
 import { KpiGrid } from "@/components/command-center/kpi-grid";
 import { LadderFunnel } from "@/components/command-center/ladder-funnel";
 import { NextActions } from "@/components/command-center/next-actions";
@@ -27,6 +28,10 @@ export default function CommandCenterPage() {
         <section className="flex flex-col rounded-lg border border-border bg-card p-5 laptop:col-span-1">
           <NextActions />
         </section>
+      </Container>
+
+      <Container className="border-b border-border py-6">
+        <FunnelCalculators />
       </Container>
 
       <Container className="py-6">
