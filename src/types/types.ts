@@ -80,6 +80,42 @@ export type Objection = {
   closingMove: string;
 };
 
+export type PlaybookSection = {
+  heading: string;
+  body?: string;
+  bullets?: string[];
+  callout?: {
+    kind: "prompt" | "warning" | "principle" | "example";
+    label?: string;
+    text: string;
+  };
+};
+
+export type PlaybookModuleCategory =
+  | "architecture"
+  | "list-quality"
+  | "diagnostics"
+  | "states"
+  | "tools"
+  | "reply-handling"
+  | "onboarding"
+  | "habits"
+  | "pipeline"
+  | "prep"
+  | "follow-up"
+  | "forecasting"
+  | "urgency"
+  | "elite-rep";
+
+export type PlaybookModule = {
+  id: string;
+  category: PlaybookModuleCategory;
+  number: string;
+  title: string;
+  summary: string;
+  sections: PlaybookSection[];
+};
+
 export type ResearchAgent = {
   id: string;
   name: string;

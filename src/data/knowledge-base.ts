@@ -74,6 +74,87 @@ When a rep brings an objection, respond in this structure:
 
 Never give more than one script per objection. Specificity beats options.
 
+==========================
+CAMPAIGN ARCHITECTURE
+==========================
+Before ANY outbound motion (door canvass, storm email, insurance cross-sell, referral play), four decisions come first:
+
+1) Who exactly? Specific company/home profile, revenue/age signals, timing triggers that mean they need to buy NOW, not eventually.
+2) What is the ONE problem you solve? One sentence a prospect nods at. Not three value props.
+3) What must this campaign achieve? Specific math. Meetings per week, list size, reply rate, touches needed.
+4) What does success look like at Day 7 / 14 / 30? Checkpoints for scale / rewrite / kill.
+
+LIST QUALITY HIERARCHY
+- Tier 1 — Signal-triggered (recent storm, new homeowner, recent claim filed, recent permit pulled). 3–5x conversion of anything else.
+- Tier 2 — Intent (homeowners actively researching roofers, reviewing Google / Nextdoor, requested quotes elsewhere).
+- Tier 3 — Firmographic (neighborhood age, roof age on record, property-value match) — volume play only.
+Elite approach: layer all three. Never rely only on Tier 3.
+
+THE 72-HOUR READ
+- Reply rate >5%: you have a winner. Scale the list. Do not touch messaging.
+- Open >40%, reply <1%: subject works, body fails. Rewrite Touch 1 body before Touch 2.
+- Open <25%, reply <1%: both failing. Pause. Audit list and subject before continuing.
+- Never change two variables at once. Never judge on <100 sends.
+
+DIAGNOSTIC FRAMEWORK (work backwards from bottleneck)
+Sent → Opened → Replied → Meeting booked → Meeting held → Opportunity.
+- Opened→Replied gap: wrong problem, wrong angle, wrong CTA.
+- Replied→Meeting gap: reply handling is weak. Fix this before outreach.
+- Meeting→Opportunity gap: discovery is failing — wrong person or wrong questions.
+The metric reps ignore: reply-to-meeting conversion. Below 60% = your reply handling is the problem, not your outreach.
+
+THREE CAMPAIGN STATES
+- Working (Open 35%+, Reply 3%+): do NOT touch. Only scale — batches of 50–100, never >20% list growth per week.
+- Underperforming: fix in order: list quality → subject line → opening line → CTA → value statement.
+- Dead (Open <20%, Reply <0.5%): kill it. Wrong list, wrong problem, or wrong timing. Iterating a dead campaign wastes months.
+
+REPLY HANDLING (categories)
+1) Positive reply: never send a calendar link first. One sentence ack, one sentence framing what the meeting accomplishes specifically, THEN the link. Increases show rate.
+2) Soft interest: ask one diagnostic question before offering time.
+3) Referral: warm intro, never cold-outreach the referral before follow-up from the sender.
+4) Objection reply: curiosity, not a pitch. "Completely understand — what are you currently using and how is it working?"
+The 60-minute rule: reply to positive replies within 60 minutes in business hours. Reply-to-meeting drops 40% past 4 hours.
+
+PIPELINE HEALTH (weekly filter)
+1) Coverage: 3–4x quota. Below 3x = at risk regardless of close rate.
+2) Stage velocity: deals stuck >14 days in same stage are stalled. Stalled deals die.
+3) Deal age: a deal at 2–3x your average cycle is a wish, not a deal.
+4) Engagement: opens, meeting attendance, stakeholder involvement. Low engagement late-stage = going dark.
+Run every Monday. Deals failing 2+ filters: accelerate with a specific action THIS week or remove from forecast.
+
+10-MINUTE CALL PREP
+- Min 1–3: Company context (what, who, size, recent news, growth challenge).
+- Min 3–5: Prospect context (role tenure, prior work, recent posts).
+- Min 5–7: Signal review (what triggered this deal, what resonated).
+- Min 7–9: Competitive landscape (don't bring unprompted).
+- Min 9–10: Write one sentence hypothesis: "I believe their primary challenge is [X] because [evidence]. Goal: confirm or discover the real one."
+
+POST-MEETING FOLLOW-UP (three types)
+1) Recap (within 2 hours): 1 sentence ack, 3 bullets of what you heard (their words), clear next step with a date.
+2) Value-add (3–5 days if no reply): genuinely useful resource, no pitch.
+3) Re-engagement (14 days no contact): reference something specific from the call, acknowledge time has passed, low-friction ask.
+Make AI-drafted follow-up sound human: vary sentence length, strip anything that could apply to any prospect.
+
+THREE LEGITIMATE URGENCY LEVERS
+1) THEIR timeline, not yours (their calendar, their event).
+2) Implementation timeline (honest dates — "sign this week = live on X; push a month = live on Y").
+3) Real external events (price change, cohort start, availability). If manufactured, don't use.
+NEVER fake a discount deadline. NEVER imply other buyers are interested unless they are. Buyers talk.
+
+THE QUESTION THAT CLOSES MORE DEALS THAN ANY TECHNIQUE
+"What would need to be true for you to feel completely confident moving forward?"
+
+ELITE REP HABITS
+- Friday self-audit: what worked, what didn't that you still do, where you lost time, one change next week.
+- Pipeline honesty: would you bet $1,000 of your own money it closes this quarter? If no, remove from forecast.
+- Losing streaks: one change at a time, don't abandon what worked before the streak, increase prospecting deliberately.
+- Continuous improvement: every campaign produces a documented lesson. 1% per week = 67% better in a year.
+
+THREE THINGS ELITE REPS BUILD
+1) Institutional intelligence — after every call, extract new objections, competitor mentions, predictive signals, one thing you'd say differently.
+2) Campaign systems others can't replicate overnight.
+3) Market insight leadership doesn't have — you talk to prospects every day; share patterns proactively.
+
 ===================
 OPERATING RULES
 ===================
