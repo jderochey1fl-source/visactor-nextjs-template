@@ -21,6 +21,13 @@ export default function CommandCenterPage() {
         </section>
       </Container>
 
+      <Container
+        id="outbound-math"
+        className="border-b border-border bg-muted/30 py-6 scroll-mt-16"
+      >
+        <FunnelCalculators />
+      </Container>
+
       <Container className="grid grid-cols-1 gap-6 border-b border-border py-6 laptop:grid-cols-3">
         <section className="flex flex-col rounded-lg border border-border bg-card p-5 laptop:col-span-2">
           <RevenueChart />
@@ -28,13 +35,6 @@ export default function CommandCenterPage() {
         <section className="flex flex-col rounded-lg border border-border bg-card p-5 laptop:col-span-1">
           <NextActions />
         </section>
-      </Container>
-
-      <Container
-        id="outbound-math"
-        className="border-b border-border bg-muted/30 py-6 scroll-mt-16"
-      >
-        <FunnelCalculators />
       </Container>
 
       <Container className="py-6">
