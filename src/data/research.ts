@@ -131,7 +131,7 @@ export const demoResearchResult: ResearchResult = {
   },
   callPrep: {
     openingLine:
-      "Derek — saw Crestline has 4 canvasser openings live on Indeed and 7 sales reps turned over in the last six months. Ladder cuts roofing sales hire washouts by 48% in 90 days. Worth 20 minutes this week?",
+      "Derek — saw Crestline has 4 canvasser openings live on Indeed and 7 sales reps turned over in the last six months. Ladder cuts roofing sales hire washouts by 48% in 90 days. Worth 15 minutes this week?",
     priorityPoints: [
       "Active canvass motion + storm-restoration mix — SmartHire and SmartTerritory both fit directly.",
       "Hiring waste: 55% 90-day turnover × ~$11K per bad hire is real money every quarter — SmartHire ROI is clear in one conversation.",
@@ -147,6 +147,6 @@ export const demoResearchResult: ResearchResult = {
     pricingAnchor:
       "SmartHire starts at $499/mo. SmartTerritory priced against closed-deal volume. Combined platform ROI typically 3 – 6x in Q1 from washout savings alone.",
     nextStep:
-      "Book a 20-minute Ladder Fit Call with Derek + his GM. Bring the ROI calculator pre-populated with Crestline's recent hiring and canvass numbers.",
+      "Book a 15-minute Ladder Fit Call with Derek + his GM. Bring the ROI calculator pre-populated with Crestline's recent hiring and canvass numbers.",
   },
 };

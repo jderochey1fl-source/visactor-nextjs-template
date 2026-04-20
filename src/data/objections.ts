@@ -44,7 +44,7 @@ export const objections: Objection[] = [
     reframe:
       "Decisions this size should be made together. Don't make me pitch it twice and hope it translates right.",
     script:
-      "Completely — SmartTerritory is only as good as the GM running canvass, so he should be in the room. Rather than me send a deck and hope it survives the handoff, can we get the three of us on a 20-minute call this week? I'll run the hiring-waste and knocks-per-close math on your actual numbers, he'll see the tool, and you'll leave with a clear yes or no.",
+      "Completely — SmartTerritory is only as good as the GM running canvass, so he should be in the room. Rather than me send a deck and hope it survives the handoff, can we get the three of us on a 15-minute call this week? I'll run the hiring-waste and knocks-per-close math on your actual numbers, he'll see the tool, and you'll leave with a clear yes or no.",
     closingMove:
       "Book the joint call before you leave the current one. Do NOT email the deck and wait.",
   },
@@ -115,9 +115,9 @@ export const objections: Objection[] = [
     reframe:
       "Roofing hire costs and dead-zone canvass time don't get cheaper — they compound.",
     script:
-      "I hear you, and I won't chase. But the math runs the other way: every month you wait, you hire another 1-2 reps who have a 60% chance of washing out, and your canvassers spend another 22 working days on doors that won't buy. A 3-month delay typically costs a mid-size roofer $18-30K in washout and lost canvass hours. If that's okay, we wait. If it's not, let's find a 20-minute window this week.",
+      "I hear you, and I won't chase. But the math runs the other way: every month you wait, you hire another 1-2 reps who have a 60% chance of washing out, and your canvassers spend another 22 working days on doors that won't buy. A 3-month delay typically costs a mid-size roofer $18-30K in washout and lost canvass hours. If that's okay, we wait. If it's not, let's find a 15-minute window this week.",
     closingMove:
-      "Quantify the delay cost in THEIR numbers, then re-ask for a specific 20-minute slot.",
+      "Quantify the delay cost in THEIR numbers, then re-ask for a specific 15-minute slot.",
   },
   {
     id: "OBJ-009",

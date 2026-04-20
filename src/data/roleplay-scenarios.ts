@@ -120,7 +120,7 @@ export const scenarios: Scenario[] = [
     keyBeats: [
       "Broke pattern in the first 8 seconds (no 'how's your day going')",
       "Named a specific, verifiable signal about their company",
-      "Asked for a small, concrete ask — not 'a few minutes'",
+      "Asked for a concrete 15-minute Ladder Fit Call — not 'a few minutes', not 20 or 30 minutes",
       "Handled the first 'not interested' without collapsing",
       "Landed a calendared next step OR a clean permission to send one thing",
     ],
@@ -165,9 +165,9 @@ export const scenarios: Scenario[] = [
     name: "Discovery Call · Quantify the Status Quo",
     stage: "diagnose",
     stageLetter: "D",
-    short: "30-minute discovery. Goal: they say their cost number in their own words.",
+    short: "30-minute discovery earned after the 15-min fit call. Goal: they say their cost number in their own words.",
     setup:
-      "Calendared 30-minute discovery call. They accepted because you cited their canvasser postings on Indeed and two recent rep departures visible on LinkedIn. They're curious but guarded. Your job is to quantify their washout and/or canvass waste in THEIR numbers — not to pitch.",
+      "You earned this one. A 15-minute Ladder Fit Call last week went well enough that they agreed to a 30-minute discovery follow-up. They're curious but guarded. Your job is to quantify their washout and/or canvass waste in THEIR numbers — not to pitch.",
     firstLineHint:
       "You (the REP) open. Small-talk is fine for 15 seconds, then drive to the purpose statement.",
     keyBeats: [
@@ -272,7 +272,13 @@ PACING RULES (critical for realism):
 - Use contractions. Use the persona's idiomatic phrases when natural, not forced.
 - Don't break character to coach unless the user types "PAUSE" or "COACH ME".
 
-IF THE USER TYPES "PAUSE" OR "COACH ME":
+CTA DISCIPLINE (mandatory — this is a Ladder house rule):
+- The initial meeting ask is ALWAYS a 15-minute Ladder Fit Call. Never 20. Never 30. Never "a few minutes."
+- This applies to every cold touch: cold calls, voicemails, gatekeeper flips, re-openers after a brush-off, re-engagement of dark deals.
+- Longer calls (30-minute discovery, 45-minute proposal walk) are second-stage — only after the 15-minute fit call has already happened.
+- If the user (as the rep) asks for a 20- or 30-minute first meeting, a skeptical buyer should push back on the length as evidence the rep hasn't earned it yet.
+
+
 - Step out of character for ONE short turn. Give the tightest tactical note (what just happened, what the better move was, one-line script). Then offer to resume from the last line.
 
 END CONDITION:
@@ -326,9 +332,11 @@ Begin the scene now. Stay in character.`;
   // mode === "user_is_buyer" — AI plays the Ladder rep, user practices being the buyer.
   return `${LADDER_CONTEXT}
 
-YOU ARE PLAYING: a top Ladder sales rep running the LADDER framework. You are calm, specific, and direct. You never product-dump. You lead with a verifiable signal, you ask layered questions, you quantify status quo cost in the buyer's numbers, and you always drive to a calendared next step.
+YOU ARE PLAYING: a top Ladder sales rep running the LADDER framework. Your name is Jordan Ellis (a Ladder AE). You are calm, specific, and direct. You never product-dump. You lead with a verifiable signal, you ask layered questions, you quantify status quo cost in the buyer's numbers, and you always drive to a calendared next step.
 
-THE BUYER IS: ${persona.name}, ${persona.title} at ${persona.company}.
+YOU ARE NOT THE BUYER. Under no circumstances should you speak in the buyer's voice, take the buyer's turn, or answer the phone as the buyer. The USER is playing ${persona.name}, the buyer. You respond as the REP only.
+
+THE BUYER (the user) IS: ${persona.name}, ${persona.title} at ${persona.company}.
 Their lens: ${persona.lens}
 
 DIFFICULTY THE USER CHOSE (how THEY are going to play the buyer): ${difficulty.toUpperCase()}.
@@ -339,11 +347,16 @@ THE SCENARIO: ${scenario.name} (LADDER stage: ${scenario.stageLetter} — ${scen
 SITUATION:
 ${scenario.setup}
 
-WHO SPEAKS FIRST: ${scenario.firstLineHint}
+WHO SPEAKS FIRST (scenario-literal): ${scenario.firstLineHint}
+
+TRANSLATE THAT TO YOUR ROLE AS THE REP:
+- If the scenario says the BUYER or GATEKEEPER speaks first, that is the USER — wait for their opening line before you respond. Do NOT voice the buyer's line yourself.
+- If the scenario says the REP speaks first (e.g. "You (the REP) open"), that is YOU — take the first turn immediately with a tight, specific opener.
+- If you see a message like "[scene starts — take the first turn as the Ladder AE]", that is the app telling you to open the call as the rep right now.
 
 The user is learning what world-class Ladder selling sounds like. Demonstrate it. Keep turns short and realistic. Never monologue. If the user-as-buyer objects, handle it using LADDER mechanics — acknowledge, reframe to cost of status quo, quantify with their numbers, ask for a concrete next step.
 
-Begin the scene now. Stay in character.`;
+Begin the scene now. Stay in character as the REP — never as the buyer.`;
 }
 
 // ---------------------------------------------------------------------------

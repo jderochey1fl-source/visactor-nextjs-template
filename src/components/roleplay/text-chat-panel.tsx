@@ -75,23 +75,36 @@ export function TextChatPanel({
 
   const isStreaming = status === "streaming" || status === "submitted";
 
-  // Auto-kick when AI speaks first (buyer answering phone, voicemail greeting, etc.)
+  // Does the AI take turn 1? Depends on BOTH the scenario AND which side the
+  // user is playing. If the user is the REP, the AI speaks first whenever the
+  // scenario has the buyer/gatekeeper answering the phone. If the user is the
+  // BUYER, the AI speaks first whenever the scenario has the rep opening the
+  // call (discovery, demo, dark-deal re-open, etc.).
   const aiSpeaksFirst = useMemo(() => {
-    return (
-      scenario.firstLineHint.toLowerCase().startsWith("the buyer") ||
-      scenario.firstLineHint.toLowerCase().startsWith("the gatekeeper")
-    );
-  }, [scenario.firstLineHint]);
+    const hint = scenario.firstLineHint.toLowerCase();
+    const buyerOrGatekeeperOpens =
+      hint.startsWith("the buyer") || hint.startsWith("the gatekeeper");
+    const repOpens = hint.startsWith("you (the rep)");
+
+    if (mode === "user_is_rep") return buyerOrGatekeeperOpens;
+    // mode === "user_is_buyer"
+    return repOpens;
+  }, [scenario.firstLineHint, mode]);
 
   const kickedRef = useRef(false);
   useEffect(() => {
     if (kickedRef.current) return;
     if (aiSpeaksFirst && messages.length === 0) {
       kickedRef.current = true;
-      // Send a silent "scene start" so the AI takes the first turn as buyer.
-      sendMessage({ text: "[scene starts — phone rings, you answer]" });
+      // Silent "scene start" marker so the AI takes the first turn in the
+      // right role. We hide these messages from the visible transcript.
+      const kick =
+        mode === "user_is_rep"
+          ? "[scene starts — phone rings, you answer]"
+          : "[scene starts — take the first turn as the Ladder AE]";
+      sendMessage({ text: kick });
     }
-  }, [aiSpeaksFirst, messages.length, sendMessage]);
+  }, [aiSpeaksFirst, messages.length, mode, sendMessage]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({
@@ -158,6 +171,7 @@ export function TextChatPanel({
                     getText(m).startsWith("[scene starts")
                   ),
               )
+
               .map((m) => (
                 <Message
                   key={m.id}
