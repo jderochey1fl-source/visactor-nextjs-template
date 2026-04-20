@@ -3,7 +3,6 @@ import { cn } from "@/lib/utils";
 
 export function StageVelocity() {
   const max = Math.max(...stageVelocity.map((s) => s.avgDays));
-  const benchmark = 5; // internal target days in stage
 
   return (
     <div className="flex flex-col gap-4">
@@ -12,14 +11,21 @@ export function StageVelocity() {
           Stage Velocity
         </h2>
         <p className="text-xs text-muted-foreground">
-          Avg days in stage &middot; target {benchmark}d
+          Avg days in stage vs. per-stage target &middot; Relationship is
+          retention, no clock
         </p>
       </div>
       <div className="flex flex-col gap-3">
         {stageVelocity.map((v) => {
           const stage = ladderStages.find((s) => s.key === v.stage)!;
           const pct = (v.avgDays / max) * 100;
-          const overBenchmark = v.avgDays > benchmark;
+          const hasTarget = v.targetDays !== null;
+          const overBenchmark =
+            hasTarget && v.avgDays > (v.targetDays as number);
+          const targetPct = hasTarget
+            ? ((v.targetDays as number) / max) * 100
+            : 0;
+
           return (
             <div key={v.stage} className="flex flex-col gap-1">
               <div className="flex items-center justify-between">
@@ -28,6 +34,15 @@ export function StageVelocity() {
                     {stage.letter}
                   </span>
                   <span className="text-sm">{stage.name}</span>
+                  {hasTarget ? (
+                    <span className="font-mono text-[10px] text-muted-foreground">
+                      target {v.targetDays}d
+                    </span>
+                  ) : (
+                    <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                      retention
+                    </span>
+                  )}
                 </div>
                 <span
                   className={cn(
@@ -42,15 +57,21 @@ export function StageVelocity() {
                 <div
                   className={cn(
                     "h-full rounded-full transition-all",
-                    overBenchmark ? "bg-hot" : "bg-primary",
+                    !hasTarget
+                      ? "bg-success"
+                      : overBenchmark
+                        ? "bg-hot"
+                        : "bg-primary",
                   )}
                   style={{ width: `${pct}%` }}
                 />
-                <div
-                  className="absolute top-0 h-full w-px bg-foreground/40"
-                  style={{ left: `${(benchmark / max) * 100}%` }}
-                  aria-label="target"
-                />
+                {hasTarget ? (
+                  <div
+                    className="absolute top-0 h-full w-px bg-foreground/40"
+                    style={{ left: `${targetPct}%` }}
+                    aria-label="target"
+                  />
+                ) : null}
               </div>
             </div>
           );
