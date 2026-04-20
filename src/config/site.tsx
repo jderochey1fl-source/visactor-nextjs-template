@@ -5,6 +5,7 @@ import {
   LayoutDashboard,
   type LucideIcon,
   Mail,
+  Mic,
   ShieldAlert,
   Sparkles,
   Telescope,
@@ -52,6 +53,12 @@ export const navigations: Navigation[] = [
     name: "Agent",
     href: "/agent",
     description: "Your AI sales coach",
+  },
+  {
+    icon: Mic,
+    name: "Role Play",
+    href: "/roleplay",
+    description: "Live reps against an AI buyer — text or voice",
   },
   {
     icon: Mail,
