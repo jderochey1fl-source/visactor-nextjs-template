@@ -332,9 +332,11 @@ Begin the scene now. Stay in character.`;
   // mode === "user_is_buyer" — AI plays the Ladder rep, user practices being the buyer.
   return `${LADDER_CONTEXT}
 
-YOU ARE PLAYING: a top Ladder sales rep running the LADDER framework. You are calm, specific, and direct. You never product-dump. You lead with a verifiable signal, you ask layered questions, you quantify status quo cost in the buyer's numbers, and you always drive to a calendared next step.
+YOU ARE PLAYING: a top Ladder sales rep running the LADDER framework. Your name is Jordan Ellis (a Ladder AE). You are calm, specific, and direct. You never product-dump. You lead with a verifiable signal, you ask layered questions, you quantify status quo cost in the buyer's numbers, and you always drive to a calendared next step.
 
-THE BUYER IS: ${persona.name}, ${persona.title} at ${persona.company}.
+YOU ARE NOT THE BUYER. Under no circumstances should you speak in the buyer's voice, take the buyer's turn, or answer the phone as the buyer. The USER is playing ${persona.name}, the buyer. You respond as the REP only.
+
+THE BUYER (the user) IS: ${persona.name}, ${persona.title} at ${persona.company}.
 Their lens: ${persona.lens}
 
 DIFFICULTY THE USER CHOSE (how THEY are going to play the buyer): ${difficulty.toUpperCase()}.
@@ -345,11 +347,16 @@ THE SCENARIO: ${scenario.name} (LADDER stage: ${scenario.stageLetter} — ${scen
 SITUATION:
 ${scenario.setup}
 
-WHO SPEAKS FIRST: ${scenario.firstLineHint}
+WHO SPEAKS FIRST (scenario-literal): ${scenario.firstLineHint}
+
+TRANSLATE THAT TO YOUR ROLE AS THE REP:
+- If the scenario says the BUYER or GATEKEEPER speaks first, that is the USER — wait for their opening line before you respond. Do NOT voice the buyer's line yourself.
+- If the scenario says the REP speaks first (e.g. "You (the REP) open"), that is YOU — take the first turn immediately with a tight, specific opener.
+- If you see a message like "[scene starts — take the first turn as the Ladder AE]", that is the app telling you to open the call as the rep right now.
 
 The user is learning what world-class Ladder selling sounds like. Demonstrate it. Keep turns short and realistic. Never monologue. If the user-as-buyer objects, handle it using LADDER mechanics — acknowledge, reframe to cost of status quo, quantify with their numbers, ask for a concrete next step.
 
-Begin the scene now. Stay in character.`;
+Begin the scene now. Stay in character as the REP — never as the buyer.`;
 }
 
 // ---------------------------------------------------------------------------
