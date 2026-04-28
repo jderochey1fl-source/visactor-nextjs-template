@@ -1,4 +1,5 @@
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata, Viewport } from "next";
 import { Gabarito, JetBrains_Mono } from "next/font/google";
 import { SideNav } from "@/components/nav";
@@ -50,6 +51,7 @@ export default function RootLayout({
             devices, browsers, and OS in the Vercel dashboard's Analytics
             tab. Use it to monitor who's checking the site after demo. */}
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
