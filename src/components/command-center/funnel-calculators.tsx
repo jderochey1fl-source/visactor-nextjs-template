@@ -32,21 +32,31 @@ const BENCH = {
 /* ----------------------------------------------------------------------- */
 export function FunnelCalculators() {
   return (
-    <div className="flex flex-col gap-4">
-      <header className="flex items-start justify-between gap-3">
-        <div>
-          <h2 className="flex items-center gap-2 text-base font-semibold text-foreground">
-            <Calculator className="h-4 w-4 text-primary" />
-            Outbound Math Toolkit
-          </h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Campaign diagnostics, reverse-goal math, and tier routing — all
-            before you hit send.
-          </p>
+    <div className="flex flex-col gap-5">
+      <header className="relative overflow-hidden rounded-lg border-2 border-hot/30 bg-gradient-to-br from-hot/[0.08] via-hot/[0.03] to-transparent p-5">
+        <div
+          className="absolute left-0 top-0 h-full w-1 bg-hot"
+          aria-hidden="true"
+        />
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex flex-col gap-2">
+            <span className="inline-flex w-fit items-center gap-1.5 rounded-full border border-hot/40 bg-hot/10 px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-hot">
+              <Calculator className="h-3 w-3" />
+              Flagship Toolkit
+            </span>
+            <h2 className="text-2xl font-semibold tracking-tight text-foreground">
+              Outbound Math Toolkit
+            </h2>
+            <p className="max-w-2xl text-sm text-muted-foreground">
+              Campaign diagnostics, reverse-goal math, and tier routing — all
+              before you hit send. Pick a calculator below; every input is
+              live-editable and your verdict updates instantly.
+            </p>
+          </div>
         </div>
       </header>
 
-      <Tabs defaultValue="health">
+      <Tabs defaultValue="health" variant="prominent">
         <TabsList>
           <TabsTrigger value="health">
             <span className="hidden phone:inline">Campaign Health</span>
@@ -61,6 +71,15 @@ export function FunnelCalculators() {
             <span className="phone:hidden">Tiers</span>
           </TabsTrigger>
         </TabsList>
+
+        <p className="-mt-2 text-xs text-muted-foreground">
+          <span className="font-semibold text-foreground">Health</span> grades
+          a campaign in flight ·{" "}
+          <span className="font-semibold text-foreground">Goal</span> reverses
+          your meeting target into emails-per-day ·{" "}
+          <span className="font-semibold text-foreground">Tiers</span>{" "}
+          compares revenue per sales hour for high-touch vs broad outbound.
+        </p>
 
         <TabsContent value="health">
           <CampaignHealthCalc />
