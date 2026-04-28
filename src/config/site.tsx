@@ -7,6 +7,7 @@ import {
   type LucideIcon,
   Mail,
   Mic,
+  Package,
   ShieldAlert,
   Telescope,
 } from "lucide-react";
@@ -83,5 +84,11 @@ export const navigations: Navigation[] = [
     name: "Playbook",
     href: "/playbook",
     description: "Objection handling library",
+  },
+  {
+    icon: Package,
+    name: "Product",
+    href: "/product",
+    description: "LADDER product knowledge: pricing, benchmarks, ICP",
   },
 ];
