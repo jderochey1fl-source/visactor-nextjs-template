@@ -158,7 +158,7 @@ export function ABTestingLab() {
             help={
               <div className="flex flex-col gap-1.5">
                 <strong className="text-foreground">
-                  What "winning" means in this test.
+                  What &ldquo;winning&rdquo; means in this test.
                 </strong>
                 <span className="text-muted-foreground">
                   <strong className="text-foreground">Reply rate</strong> is
