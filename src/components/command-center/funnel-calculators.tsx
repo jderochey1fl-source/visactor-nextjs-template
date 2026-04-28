@@ -72,7 +72,7 @@ export function FunnelCalculators() {
           </TabsTrigger>
         </TabsList>
 
-        <p className="-mt-2 text-xs text-muted-foreground">
+        <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
           <span className="font-semibold text-foreground">Health</span> grades
           a campaign in flight ·{" "}
           <span className="font-semibold text-foreground">Goal</span> reverses
