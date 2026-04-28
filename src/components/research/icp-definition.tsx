@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
+import { OptionGroup } from "@/components/ui/option-group";
 import { ladderIcp } from "@/data/icp";
 import { cn } from "@/lib/utils";
 
@@ -73,7 +74,33 @@ export function IcpDefinition() {
 
       {open ? (
         <div className="flex flex-col gap-5 p-5">
-          <FocusTabs value={focus} onChange={setFocus} />
+          <OptionGroup<"both" | "smarthire" | "smartterritory">
+            label="Product focus"
+            help={
+              <div className="flex flex-col gap-1.5">
+                <strong className="text-foreground">
+                  Which Ladder product is this prospect for?
+                </strong>
+                <span className="text-muted-foreground">
+                  Switching focus reframes the ONE-problem statement and the
+                  trigger events below. Use{" "}
+                  <strong className="text-foreground">SmartHire</strong> for
+                  rep-recruiting / washout pain,{" "}
+                  <strong className="text-foreground">SmartTerritory</strong>{" "}
+                  for canvass and routing pain. Pick{" "}
+                  <strong className="text-foreground">Both</strong> when the
+                  account fits cleanly for either or you don&apos;t know yet.
+                </span>
+              </div>
+            }
+            value={focus}
+            onChange={setFocus}
+            options={[
+              { value: "both", label: "Both products" },
+              { value: "smarthire", label: "SmartHire focus" },
+              { value: "smartterritory", label: "SmartTerritory focus" },
+            ]}
+          />
 
           <div className="rounded-md border border-primary/30 bg-primary/5 p-4">
             <div className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-wider text-primary">
@@ -152,39 +179,6 @@ export function IcpDefinition() {
         </div>
       ) : null}
     </section>
-  );
-}
-
-function FocusTabs({
-  value,
-  onChange,
-}: {
-  value: "both" | "smarthire" | "smartterritory";
-  onChange: (v: "both" | "smarthire" | "smartterritory") => void;
-}) {
-  const tabs: { key: typeof value; label: string }[] = [
-    { key: "both", label: "Both products" },
-    { key: "smarthire", label: "SmartHire focus" },
-    { key: "smartterritory", label: "SmartTerritory focus" },
-  ];
-  return (
-    <div className="inline-flex w-full items-center rounded-md border border-border bg-background p-1 tablet:w-auto">
-      {tabs.map((t) => (
-        <button
-          key={t.key}
-          type="button"
-          onClick={() => onChange(t.key)}
-          className={cn(
-            "flex-1 rounded-sm px-3 py-1.5 text-xs font-medium transition-colors tablet:flex-none",
-            value === t.key
-              ? "bg-primary text-primary-foreground"
-              : "text-muted-foreground hover:text-foreground",
-          )}
-        >
-          {t.label}
-        </button>
-      ))}
-    </div>
   );
 }
 

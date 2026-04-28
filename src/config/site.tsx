@@ -1,5 +1,6 @@
 import {
   BookOpen,
+  Bot,
   Briefcase,
   FlaskConical,
   LayoutDashboard,
@@ -7,7 +8,6 @@ import {
   Mail,
   Mic,
   ShieldAlert,
-  Sparkles,
   Telescope,
 } from "lucide-react";
 
@@ -43,16 +43,16 @@ export const navigations: Navigation[] = [
     description: "Pre-call intelligence in 60 seconds",
   },
   {
+    icon: Bot,
+    name: "Agents",
+    href: "/agents",
+    description: "Trigger Hunter, Coach, and the rest of your AI workforce",
+  },
+  {
     icon: Briefcase,
     name: "Deals",
     href: "/deals",
     description: "Pipeline with health scoring",
-  },
-  {
-    icon: Sparkles,
-    name: "Agent",
-    href: "/agent",
-    description: "Your AI sales coach",
   },
   {
     icon: Mic,

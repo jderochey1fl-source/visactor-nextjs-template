@@ -155,14 +155,15 @@ function TabButton({
     <button
       type="button"
       onClick={onClick}
+      aria-pressed={active}
       className={cn(
-        "flex items-center gap-2 rounded-md border px-3 py-1.5 font-mono text-[11px] font-medium uppercase tracking-wider transition-colors",
+        "inline-flex items-center gap-2 rounded-md border px-3.5 py-2 text-sm font-semibold tracking-tight transition-all duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hot/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
         active
-          ? "border-primary/40 bg-primary/10 text-primary"
-          : "border-transparent text-muted-foreground hover:bg-muted/40 hover:text-foreground",
+          ? "border-hot bg-hot text-white shadow-sm"
+          : "border-border bg-card text-foreground/80 hover:border-hot/40 hover:bg-hot/5 hover:text-foreground",
       )}
     >
-      <Icon className="h-3.5 w-3.5" />
+      <Icon className="h-4 w-4" />
       {label}
     </button>
   );

@@ -1,5 +1,5 @@
 import { AgentChat } from "@/components/agent/agent-chat";
 
-export default function AgentPage() {
+export default function CoachPage() {
   return <AgentChat />;
 }

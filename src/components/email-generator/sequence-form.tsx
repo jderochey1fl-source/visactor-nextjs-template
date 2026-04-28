@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { OptionGroup } from "@/components/ui/option-group";
 import { Textarea } from "@/components/ui/textarea";
 import {
   DEFAULT_SEQUENCE_INPUTS,
@@ -140,25 +141,31 @@ export function SequenceForm({ onGenerate, isGenerating }: Props) {
         </Field>
       </div>
 
-      <Field label="Tone">
-        <div className="flex flex-wrap gap-2">
-          {(["direct", "warm", "analytical"] as const).map((tone) => (
-            <button
-              key={tone}
-              type="button"
-              onClick={() => update("tone", tone)}
-              className={[
-                "rounded-md border px-3 py-1.5 text-sm font-medium capitalize transition",
-                inputs.tone === tone
-                  ? "border-primary bg-primary text-primary-foreground"
-                  : "border-border bg-card text-muted-foreground hover:border-primary/50 hover:text-foreground",
-              ].join(" ")}
-            >
-              {tone}
-            </button>
-          ))}
-        </div>
-      </Field>
+      <OptionGroup<SequenceInputs["tone"]>
+        label="Tone"
+        help={
+          <div className="flex flex-col gap-1.5">
+            <strong className="text-foreground">
+              How the email should feel when read.
+            </strong>
+            <span className="text-muted-foreground">
+              <strong className="text-foreground">Direct</strong> — short
+              sentences, leads with the ask, best for senior buyers.{" "}
+              <strong className="text-foreground">Warm</strong> — more
+              relational, references their world before the ask.{" "}
+              <strong className="text-foreground">Analytical</strong> — leans
+              on numbers and ROI math, best when you have specifics.
+            </span>
+          </div>
+        }
+        value={inputs.tone}
+        onChange={(v) => update("tone", v)}
+        options={[
+          { value: "direct", label: "Direct" },
+          { value: "warm", label: "Warm" },
+          { value: "analytical", label: "Analytical" },
+        ]}
+      />
 
       <Button
         type="submit"

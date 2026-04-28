@@ -208,10 +208,25 @@ function Section({
   subtitle?: string;
   children: React.ReactNode;
 }) {
+  // Split a leading "1. " step number from the rest of the title so the
+  // step number can be rendered as a contrast pill, the way other
+  // "configurable" surfaces highlight that something is selectable.
+  const stepMatch = /^(\d+)\.\s+(.*)$/.exec(title);
+  const stepNumber = stepMatch?.[1];
+  const stepTitle = stepMatch?.[2] ?? title;
   return (
     <section className="flex flex-col gap-3">
-      <div className="flex flex-col gap-0.5">
-        <h2 className="text-sm font-semibold tracking-tight">{title}</h2>
+      <div className="flex flex-col gap-1">
+        <div className="flex items-baseline gap-2">
+          {stepNumber ? (
+            <span className="inline-flex h-6 min-w-6 items-center justify-center rounded-md border border-hot/40 bg-hot/10 px-1.5 font-mono text-[11px] font-bold text-hot">
+              {stepNumber}
+            </span>
+          ) : null}
+          <h2 className="font-mono text-[12px] font-bold uppercase tracking-[0.12em] text-hot">
+            {stepTitle}
+          </h2>
+        </div>
         {subtitle ? (
           <p className="text-xs text-muted-foreground">{subtitle}</p>
         ) : null}

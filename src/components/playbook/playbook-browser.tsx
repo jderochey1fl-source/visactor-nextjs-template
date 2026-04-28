@@ -95,7 +95,11 @@ export function PlaybookBrowser() {
   };
 
   return (
-    <Tabs defaultValue="decisions" className="flex flex-col gap-5">
+    <Tabs
+      defaultValue="decisions"
+      variant="prominent"
+      className="flex flex-col gap-5"
+    >
       <TabsList>
         <TabsTrigger value="decisions">Four Decisions</TabsTrigger>
         <TabsTrigger value="campaign">Campaign Playbook</TabsTrigger>

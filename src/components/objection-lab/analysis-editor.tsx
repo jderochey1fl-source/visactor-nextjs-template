@@ -174,7 +174,7 @@ export function AnalysisEditor({
         </div>
       </header>
 
-      <div className="flex items-center gap-1 border-b border-border">
+      <div className="flex items-center gap-2 border-b border-border">
         <TabButton
           active={tab === "analysis"}
           onClick={() => setTab("analysis")}
@@ -373,10 +373,11 @@ function TabButton({
     <button
       type="button"
       onClick={onClick}
+      aria-pressed={active}
       className={cn(
-        "border-b-2 px-4 py-2 font-mono text-[11px] font-medium uppercase tracking-wider transition-colors",
+        "-mb-px border-b-2 px-4 py-2.5 text-[15px] font-semibold tracking-tight transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hot/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
         active
-          ? "border-primary text-foreground"
+          ? "border-hot text-hot"
           : "border-transparent text-muted-foreground hover:text-foreground",
       )}
     >

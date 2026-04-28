@@ -94,7 +94,7 @@ export function AgentChat() {
     <div className="flex h-full flex-col bg-background">
       {/* Tab bar */}
       <div className="border-b border-border bg-card/40">
-        <div className="mx-auto flex max-w-4xl items-center gap-1 px-6">
+        <div className="mx-auto flex max-w-4xl items-center gap-2 px-6">
           <TabButton
             icon={MessageSquare}
             label="Chat"
@@ -106,6 +106,7 @@ export function AgentChat() {
             label="Prompt Library"
             active={tab === "library"}
             onClick={() => setTab("library")}
+            badge="22 plays"
           />
         </div>
       </div>
@@ -189,26 +190,41 @@ function TabButton({
   label,
   active,
   onClick,
+  badge,
 }: {
   icon: React.ComponentType<{ className?: string }>;
   label: string;
   active: boolean;
   onClick: () => void;
+  /** Optional inventory hint, e.g. "29 plays". */
+  badge?: string;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
       className={cn(
-        "flex items-center gap-2 border-b-2 px-3 py-3 font-mono text-[11px] font-medium uppercase tracking-wider transition-colors",
+        "-mb-px flex items-center gap-2 border-b-2 px-4 py-3 text-[15px] font-semibold tracking-tight transition-colors",
         active
-          ? "border-primary text-foreground"
+          ? "border-hot text-hot"
           : "border-transparent text-muted-foreground hover:text-foreground",
       )}
       aria-pressed={active}
     >
-      <Icon className="h-3.5 w-3.5" />
+      <Icon className="h-4 w-4" />
       {label}
+      {badge ? (
+        <span
+          className={cn(
+            "ml-1 rounded-full border px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider",
+            active
+              ? "border-hot/40 bg-hot/10 text-hot"
+              : "border-border bg-muted/60 text-muted-foreground",
+          )}
+        >
+          {badge}
+        </span>
+      ) : null}
     </button>
   );
 }
