@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Gabarito, JetBrains_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { SideNav } from "@/components/nav";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
@@ -44,6 +45,7 @@ export default function RootLayout({
             <div className="flex-grow overflow-auto">{children}</div>
           </div>
         </Providers>
+        <Analytics />
       </body>
     </html>
   );
