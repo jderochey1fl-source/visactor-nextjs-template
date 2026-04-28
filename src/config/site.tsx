@@ -6,6 +6,7 @@ import {
   type LucideIcon,
   Mail,
   Mic,
+  Radar,
   ShieldAlert,
   Sparkles,
   Telescope,
@@ -41,6 +42,12 @@ export const navigations: Navigation[] = [
     name: "Research",
     href: "/research",
     description: "Pre-call intelligence in 60 seconds",
+  },
+  {
+    icon: Radar,
+    name: "Trigger Hunter",
+    href: "/trigger-hunter",
+    description: "Hot accounts ranked by storm + hiring signals",
   },
   {
     icon: Briefcase,
