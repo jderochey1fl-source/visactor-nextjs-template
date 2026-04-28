@@ -76,7 +76,7 @@ export function FunnelCalculators() {
           <span className="font-semibold text-foreground">Health</span> grades
           a campaign in flight ·{" "}
           <span className="font-semibold text-foreground">Goal</span> reverses
-          your meeting target into emails-per-day ·{" "}
+          your meeting target into total emails to send ·{" "}
           <span className="font-semibold text-foreground">Tiers</span>{" "}
           compares revenue per sales hour for high-touch vs broad outbound.
         </p>
@@ -253,59 +253,31 @@ function MeetingGoalCalc() {
   const [replyRate, setReplyRate] = useState(2); // % — cold email positive reply
   const [replyToMeeting, setReplyToMeeting] = useState(40); // % — positive reply → booked
   const [showRate, setShowRate] = useState(80); // % — booked → held
-  const [workingDays, setWorkingDays] = useState(20);
-  const [capacity, setCapacity] = useState(75); // current emails/day
 
-  const {
-    booked,
-    positiveReplies,
-    emailsMonth,
-    emailsDay,
-  } = useMemo(() => {
+  const { booked, positiveReplies, emailsTotal } = useMemo(() => {
     const rr = Math.max(replyRate, 0.01) / 100;
     const r2m = Math.max(replyToMeeting, 0.01) / 100;
     const sr = Math.max(showRate, 0.01) / 100;
+    // Reverse-goal math: meetings ÷ show ÷ reply→meeting ÷ reply rate
     const booked = meetings / sr;
     const positiveReplies = booked / r2m;
-    const emailsMonth = positiveReplies / rr;
-    const emailsDay = emailsMonth / Math.max(workingDays, 1);
+    const emailsTotal = positiveReplies / rr;
     return {
       booked: Math.ceil(booked),
       positiveReplies: Math.ceil(positiveReplies),
-      emailsMonth: Math.ceil(emailsMonth),
-      emailsDay: Math.ceil(emailsDay),
+      emailsTotal: Math.ceil(emailsTotal),
     };
-  }, [meetings, replyRate, replyToMeeting, showRate, workingDays]);
-
-  const gap = emailsDay - capacity;
-  const feasible = gap <= 0;
+  }, [meetings, replyRate, replyToMeeting, showRate]);
 
   return (
     <div className="grid grid-cols-1 gap-5 rounded-lg border border-border bg-card p-5 laptop:grid-cols-5">
       {/* Inputs */}
       <div className="grid grid-cols-2 gap-3 laptop:col-span-3">
         <NumberField
-          label="Meetings held / month"
+          label="Meeting goal"
           value={meetings}
           onChange={setMeetings}
-        />
-        <NumberField
-          label="Working days"
-          value={workingDays}
-          onChange={setWorkingDays}
-        />
-        <NumberField
-          label="Reply rate %"
-          value={replyRate}
-          onChange={setReplyRate}
-          step={0.1}
-          hint="Industry avg: 2%"
-        />
-        <NumberField
-          label="Reply → meeting %"
-          value={replyToMeeting}
-          onChange={setReplyToMeeting}
-          hint="Team avg: 40%"
+          hint="Held meetings you need"
         />
         <NumberField
           label="Show rate %"
@@ -314,9 +286,17 @@ function MeetingGoalCalc() {
           hint="Team avg: 80%"
         />
         <NumberField
-          label="Current capacity / day"
-          value={capacity}
-          onChange={setCapacity}
+          label="Reply → meeting %"
+          value={replyToMeeting}
+          onChange={setReplyToMeeting}
+          hint="Team avg: 40%"
+        />
+        <NumberField
+          label="Reply rate %"
+          value={replyRate}
+          onChange={setReplyRate}
+          step={0.1}
+          hint="Industry avg: 2%"
         />
       </div>
 
@@ -329,48 +309,20 @@ function MeetingGoalCalc() {
           hint="÷ reply→meeting"
         />
         <ResultRow
-          label="Emails / month"
-          value={emailsMonth.toLocaleString()}
+          label="Total emails to send"
+          value={emailsTotal.toLocaleString()}
+          emphasis
           hint="÷ reply rate"
         />
-        <ResultRow
-          label="Emails / day"
-          value={emailsDay}
-          emphasis
-          hint={`÷ ${workingDays} days`}
-        />
 
-        <div
-          className={cn(
-            "mt-1 rounded-md border p-3 text-sm",
-            feasible
-              ? "border-success/40 bg-success/10 text-success"
-              : "border-destructive/40 bg-destructive/10 text-destructive",
-          )}
-        >
-          <div className="flex items-start gap-2">
-            {feasible ? (
-              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
-            ) : (
-              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
-            )}
-            <div className="text-foreground">
-              {feasible ? (
-                <>
-                  <span className="font-semibold">Feasible.</span> You have{" "}
-                  <span className="font-mono">{Math.abs(gap)}</span>{" "}
-                  emails/day of headroom.
-                </>
-              ) : (
-                <>
-                  <span className="font-semibold">Not feasible at current capacity.</span>{" "}
-                  Short by <span className="font-mono">{gap}</span> emails/day.
-                  Improve reply rate, improve reply-to-meeting, or reset the
-                  goal before launching.
-                </>
-              )}
-            </div>
-          </div>
+        <div className="mt-1 rounded-md border border-hot/30 bg-hot/5 p-3 text-xs leading-relaxed text-muted-foreground">
+          <span className="font-semibold text-foreground">The formula:</span>{" "}
+          meeting goal ÷ show rate ÷ reply→meeting ÷ reply rate ={" "}
+          <span className="font-mono font-semibold text-hot">
+            {emailsTotal.toLocaleString()}
+          </span>{" "}
+          emails. Pace and headcount stay out of the math here — that&apos;s a
+          campaign-planning question, not a funnel-truth question.
         </div>
       </div>
     </div>
