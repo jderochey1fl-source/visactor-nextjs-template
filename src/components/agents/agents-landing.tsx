@@ -17,19 +17,49 @@ import { AgentCard } from "./agent-card";
 export function AgentsLanding() {
   return (
     <div className="flex flex-col gap-8">
-      <header className="max-w-3xl">
-        <p className="text-xs font-medium uppercase tracking-wider text-hot">
-          Agent platform
-        </p>
-        <h2 className="mt-2 text-balance text-2xl font-semibold leading-tight tracking-tight md:text-3xl">
-          One AI workforce. Each agent does one thing extremely well.
-        </h2>
-        <p className="mt-3 text-pretty text-sm leading-relaxed text-muted-foreground md:text-base">
-          Trigger Hunter finds the right shop on the right day. Pre-Call Prep
-          turns that into a one-page dossier. Voice Sparring lets you rehearse
-          the call three times before you dial. Coach is on call when something
-          goes sideways. Built to compose, not to live in silos.
-        </p>
+      <header className="relative overflow-hidden rounded-lg border border-hot/30 bg-gradient-to-br from-hot/[0.08] via-card to-card">
+        {/* hot orange anchor rail */}
+        <div
+          aria-hidden
+          className="absolute left-0 top-0 h-full w-1 bg-hot"
+        />
+        <div className="relative flex flex-col gap-5 px-6 py-10 md:px-10 md:py-14">
+          <div className="flex items-center gap-2">
+            <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-hot" />
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-hot">
+              The Agent Platform
+            </p>
+          </div>
+          <h1 className="max-w-4xl text-balance text-3xl font-bold leading-[1.05] tracking-tight md:text-4xl lg:text-5xl">
+            Eight specialists.{" "}
+            <span className="text-hot">One outbound motion.</span>
+          </h1>
+          <p className="max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
+            Your AE doesn&apos;t need another generalist tool. They need a
+            bench. Each agent owns one move &mdash; trigger, dossier, drill,
+            call. Chained together, they run the week.
+          </p>
+          <div className="mt-1 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+            <span className="flex items-center gap-2">
+              <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-hot" />
+              <span className="text-foreground">{activeAgents.length} live</span>
+            </span>
+            <span className="flex items-center gap-2">
+              <span
+                aria-hidden
+                className="h-1.5 w-1.5 rounded-full bg-muted-foreground/50"
+              />
+              {comingSoonAgents.length} on the roadmap
+            </span>
+            <span className="flex items-center gap-2">
+              <span
+                aria-hidden
+                className="h-1.5 w-1.5 rounded-full bg-muted-foreground/50"
+              />
+              Built to compose, not silo
+            </span>
+          </div>
+        </div>
       </header>
 
       <section aria-labelledby="active-agents">
