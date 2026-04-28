@@ -14,6 +14,7 @@ import { VariantGenerator } from "@/components/ab-testing/variant-generator";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { OptionGroup } from "@/components/ui/option-group";
 import {
   Tabs,
   TabsContent,
@@ -125,45 +126,55 @@ export function ABTestingLab() {
               placeholder="e.g. Opening line — SmartHire to TX roofing VPs"
             />
           </div>
-          <div className="flex flex-col gap-1.5">
-            <Label>Variable being tested</Label>
-            <div className="flex flex-wrap gap-1.5">
-              {TEST_VARIABLES.map((v) => (
-                <button
-                  key={v.id}
-                  type="button"
-                  onClick={() => setTestVariable(v.id)}
-                  className={`rounded-md border px-2.5 py-1 text-xs font-medium transition-colors ${
-                    testVariable === v.id
-                      ? "border-primary bg-primary text-primary-foreground"
-                      : "border-border bg-card text-muted-foreground hover:bg-muted"
-                  }`}
-                >
-                  <span className="mr-1 font-mono opacity-70">#{v.rank}</span>
-                  {v.label}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <Label>Primary goal metric</Label>
-            <div className="flex flex-wrap gap-1.5">
-              {GOAL_METRICS.map((g) => (
-                <button
-                  key={g.id}
-                  type="button"
-                  onClick={() => setGoalMetric(g.id)}
-                  className={`rounded-md border px-3 py-1 text-xs font-medium transition-colors ${
-                    goalMetric === g.id
-                      ? "border-primary bg-primary text-primary-foreground"
-                      : "border-border bg-card text-muted-foreground hover:bg-muted"
-                  }`}
-                >
-                  {g.label}
-                </button>
-              ))}
-            </div>
-          </div>
+          <OptionGroup<TestVariable>
+            label="Variable being tested"
+            help={
+              <div className="flex flex-col gap-1.5">
+                <strong className="text-foreground">
+                  Pick exactly one thing to vary.
+                </strong>
+                <span className="text-muted-foreground">
+                  Variables are ranked by leverage —{" "}
+                  <strong className="text-foreground">
+                    #1 Opening line
+                  </strong>{" "}
+                  moves results the most, #5 length the least. Whatever you
+                  pick is the only thing that should differ between Variant A
+                  and Variant B; everything else stays identical so the lift
+                  is attributable.
+                </span>
+              </div>
+            }
+            value={testVariable}
+            onChange={setTestVariable}
+            options={TEST_VARIABLES.map((v) => ({
+              value: v.id,
+              label: v.label,
+              prefix: `#${v.rank}`,
+            }))}
+          />
+          <OptionGroup<GoalMetric>
+            label="Primary goal metric"
+            help={
+              <div className="flex flex-col gap-1.5">
+                <strong className="text-foreground">
+                  What "winning" means in this test.
+                </strong>
+                <span className="text-muted-foreground">
+                  <strong className="text-foreground">Reply rate</strong> is
+                  the right default for outbound — replies turn into pipeline.{" "}
+                  <strong className="text-foreground">Open rate</strong> is
+                  only useful when you&apos;re testing subject lines.{" "}
+                  <strong className="text-foreground">Meeting rate</strong> is
+                  the gold standard but needs more sends to reach
+                  significance.
+                </span>
+              </div>
+            }
+            value={goalMetric}
+            onChange={setGoalMetric}
+            options={GOAL_METRICS.map((g) => ({ value: g.id, label: g.label }))}
+          />
         </div>
 
         <div className="flex items-start gap-2 rounded-md border border-border bg-muted/50 p-3 text-xs leading-relaxed text-muted-foreground">
