@@ -16,6 +16,7 @@
     "@radix-ui/react-popover": "^1.1.2",
     "@radix-ui/react-slot": "^1.1.0",
     "@vapi-ai/web": "^2.5.2",
+    "@vercel/analytics": "^2.0.1",
     "@visactor/react-vchart": "^1.12.10",
     "@visactor/vchart": "^1.12.10",
     "ai": "^6.0.166",
