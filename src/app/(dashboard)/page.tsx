@@ -1,15 +1,13 @@
 import { Calculator, Sparkles, Target } from "lucide-react";
 import Link from "next/link";
 
-import { ActivityFeed } from "@/components/command-center/activity-feed";
 import { CallPrepHypothesis } from "@/components/command-center/call-prep-hypothesis";
 import { DemoBanner } from "@/components/command-center/demo-banner";
 import { FunnelCalculators } from "@/components/command-center/funnel-calculators";
 import { KpiGrid } from "@/components/command-center/kpi-grid";
-import { LadderFunnel } from "@/components/command-center/ladder-funnel";
-import { NextActions } from "@/components/command-center/next-actions";
-import { RevenueChart } from "@/components/command-center/revenue-chart";
-import { StageVelocity } from "@/components/command-center/stage-velocity";
+import { MyLast7Days } from "@/components/command-center/my-last-7-days";
+import { SkillsHeatmap } from "@/components/command-center/skills-heatmap";
+import { TodaysDrill } from "@/components/command-center/todays-drill";
 import Container from "@/components/container";
 
 export default function CommandCenterPage() {
@@ -18,12 +16,24 @@ export default function CommandCenterPage() {
       <DemoBanner />
       <KpiGrid />
 
+      {/* Coaching cockpit hierarchy:
+          1) MyLast7Days  — what the rep actually did this week
+          2) SkillsHeatmap + TodaysDrill — where they're sharp / cold + the AI's
+             one-click answer to the biggest gap.
+          Replaces the old LadderFunnel/StageVelocity/RevenueChart/NextActions/
+          ActivityFeed pipeline cluster. Those components still exist for the
+          /deals route; they just don't belong on the home page where they
+          mis-position ASCEND as a CRM. */}
+      <Container className="border-b border-border py-6">
+        <MyLast7Days />
+      </Container>
+
       <Container className="grid grid-cols-1 gap-6 border-b border-border py-6 laptop:grid-cols-3">
         <section className="laptop:col-span-2">
-          <LadderFunnel />
+          <SkillsHeatmap />
         </section>
         <section className="laptop:col-span-1">
-          <StageVelocity />
+          <TodaysDrill />
         </section>
       </Container>
 
@@ -62,23 +72,8 @@ export default function CommandCenterPage() {
         <FunnelCalculators />
       </Container>
 
-      <Container className="border-b border-border py-8">
+      <Container className="py-8">
         <CallPrepHypothesis />
-      </Container>
-
-      <Container className="grid grid-cols-1 gap-6 border-b border-border py-6 laptop:grid-cols-3">
-        <section className="flex flex-col rounded-lg border border-border bg-card p-5 laptop:col-span-2">
-          <RevenueChart />
-        </section>
-        <section className="flex flex-col rounded-lg border border-border bg-card p-5 laptop:col-span-1">
-          <NextActions />
-        </section>
-      </Container>
-
-      <Container className="py-6">
-        <section className="rounded-lg border border-border bg-card p-5">
-          <ActivityFeed />
-        </section>
       </Container>
     </div>
   );
