@@ -1,16 +1,18 @@
 import { TopNav } from "@/components/nav";
 import { Badge } from "@/components/ui/badge";
+import { getAgent } from "@/data/agents";
 
-export default function AgentLayout({
+export default function CoachLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const agent = getAgent("coach");
   return (
     <>
       <TopNav
-        title="Agent"
-        subtitle="Claude sales coach · trained on LADDER + roofing ops"
+        title={agent?.name ?? "Coach Chat"}
+        subtitle={agent?.tagline ?? "Claude sales coach trained on LADDER + roofing ops"}
         action={
           <Badge variant="default" className="gap-1.5 px-2 py-1">
             <span className="inline-flex h-1.5 w-1.5 animate-pulse-dot rounded-full bg-primary" />
