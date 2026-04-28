@@ -35,9 +35,9 @@ export function AgentsLanding() {
             <span className="text-hot">One outbound motion.</span>
           </h1>
           <p className="max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
-            Your AE doesn&apos;t need another generalist tool. They need a
-            bench. Each agent owns one move &mdash; trigger, dossier, drill,
-            call. Chained together, they run the week.
+            A bench of focused agents that ride along with the AE&apos;s week.
+            Each one owns one move &mdash; trigger, dossier, drill, call.
+            Chained together, they compound.
           </p>
           <div className="mt-1 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
             <span className="flex items-center gap-2">
