@@ -59,7 +59,7 @@ export function VoiceCallPanel(props: Props) {
     (async () => {
       try {
         const [tokenRes, sessionRes] = await Promise.all([
-          fetch("/api/roleplay/hume-token", { method: "POST" }),
+          fetch("/api/roleplay/hume-token", { method: "GET" }),
           fetch("/api/roleplay/hume-session", {
             method: "POST",
             headers: { "content-type": "application/json" },
@@ -76,7 +76,7 @@ export function VoiceCallPanel(props: Props) {
           const body = await tokenRes.json().catch(() => ({}));
           throw new Error(
             body?.error ??
-              "Could not mint a Hume access token. Check HUME_API_KEY and HUME_SECRET.",
+              `Hume token request failed (HTTP ${tokenRes.status}). If status is 405, the route method is wrong; otherwise check HUME_API_KEY and HUME_SECRET in Vercel Vars.`,
           );
         }
         if (!sessionRes.ok) {
