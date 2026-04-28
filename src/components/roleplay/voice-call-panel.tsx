@@ -168,13 +168,17 @@ function Call({
   const [connectError, setConnectError] = useState<string | null>(null);
   const startedAtRef = useRef<number | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const lastConnectAttemptRef = useRef<number | null>(null);
+  const sawConnectedRef = useRef(false);
 
   const isLive = status.value === "connected";
   const isConnecting = status.value === "connecting";
+  const isDisconnected = !isLive && !isConnecting;
 
   useEffect(() => {
     if (isLive && startedAtRef.current === null) {
       startedAtRef.current = Date.now();
+      sawConnectedRef.current = true;
       timerRef.current = setInterval(() => {
         if (startedAtRef.current) {
           setElapsed(Math.floor((Date.now() - startedAtRef.current) / 1000));
@@ -190,6 +194,23 @@ function Call({
       if (timerRef.current) clearInterval(timerRef.current);
     };
   }, [isLive]);
+
+  // Silent-disconnect detector. If we attempted to connect, briefly hit
+  // "connected" or "connecting", then dropped back to "disconnected" within
+  // 3 seconds with zero transcript turns, surface an error so the user
+  // doesn't just see the Start button reappear with no explanation.
+  useEffect(() => {
+    if (!isDisconnected) return;
+    const attemptedAt = lastConnectAttemptRef.current;
+    if (!attemptedAt) return;
+    const elapsedMs = Date.now() - attemptedAt;
+    if (elapsedMs > 3000) return;
+    if (messages.length > 0) return;
+    if (connectError) return;
+    setConnectError(
+      "The call connected then immediately disconnected before any audio. Most common causes: (1) the system prompt exceeded Hume's 8,000-character limit, (2) the HUME_CONFIG / HUME_CONFIG_MALE UUID points to a deleted or unpublished EVI config, or (3) the access token was rejected. Check your browser console for a Hume WebSocket close code and message.",
+    );
+  }, [isDisconnected, messages.length, connectError]);
 
   // Build transcript from the streaming messages array.
   const lines = useMemo(() => {
@@ -210,6 +231,8 @@ function Call({
 
   const start = async () => {
     setConnectError(null);
+    sawConnectedRef.current = false;
+    lastConnectAttemptRef.current = Date.now();
     try {
       await connect({
         auth: { type: "accessToken", value: accessToken },

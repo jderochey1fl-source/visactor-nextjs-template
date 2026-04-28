@@ -43,6 +43,25 @@ export async function POST(req: Request) {
       difficulty,
     });
 
+    // Hume EVI session_settings.system_prompt has a hard 8,000 character
+    // limit. If we exceed it, the WebSocket accepts the connection, fails
+    // validation, and disconnects within ~400ms with no readable error
+    // surfaced to the client. Fail loud here so we see the regression
+    // immediately instead of debugging a silent disconnect.
+    const HUME_PROMPT_LIMIT = 8000;
+    if (systemPrompt.length > HUME_PROMPT_LIMIT) {
+      // eslint-disable-next-line no-console
+      console.error(
+        `[roleplay/hume-session] system prompt is ${systemPrompt.length} chars (limit ${HUME_PROMPT_LIMIT}). mode=${mode} scenario=${scenario.id} persona=${persona.id}`,
+      );
+      return NextResponse.json(
+        {
+          error: `System prompt is ${systemPrompt.length} characters; Hume's limit is ${HUME_PROMPT_LIMIT}. The buildSystemPrompt() output for mode='${mode}' scenario='${scenario.id}' is too long. Trim LADDER_REP_PRODUCT_FACTS or BUYER_FRAME in src/data/roleplay-scenarios.ts.`,
+        },
+        { status: 500 },
+      );
+    }
+
     // Pick the Hume config that matches the persona's voice gender when the
     // AI is playing the buyer. When the AI plays the rep (user_is_buyer
     // mode), we use the default female config since the rep is us either way.
