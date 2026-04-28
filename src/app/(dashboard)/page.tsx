@@ -5,9 +5,9 @@ import { CallPrepHypothesis } from "@/components/command-center/call-prep-hypoth
 import { DemoBanner } from "@/components/command-center/demo-banner";
 import { FunnelCalculators } from "@/components/command-center/funnel-calculators";
 import { KpiGrid } from "@/components/command-center/kpi-grid";
+import { LadderMastery } from "@/components/command-center/ladder-mastery";
 import { MyLast7Days } from "@/components/command-center/my-last-7-days";
 import { SkillsHeatmap } from "@/components/command-center/skills-heatmap";
-import { TodaysDrill } from "@/components/command-center/todays-drill";
 import Container from "@/components/container";
 
 export default function CommandCenterPage() {
@@ -17,24 +17,20 @@ export default function CommandCenterPage() {
       <KpiGrid />
 
       {/* Coaching cockpit hierarchy:
-          1) MyLast7Days  — what the rep actually did this week
-          2) SkillsHeatmap + TodaysDrill — where they're sharp / cold + the AI's
-             one-click answer to the biggest gap.
-          Replaces the old LadderFunnel/StageVelocity/RevenueChart/NextActions/
-          ActivityFeed pipeline cluster. Those components still exist for the
-          /deals route; they just don't belong on the home page where they
-          mis-position ASCEND as a CRM. */}
+          1) LadderMastery   — hero. Mastery score per LADDER stage + Today's
+             Drill CTA. Replaces the old pipeline cluster as the centerpiece.
+          2) MyLast7Days     — what the rep actually did this week.
+          3) SkillsHeatmap   — full-width gap matrix across scenarios. */}
+      <Container className="border-b border-border py-6">
+        <LadderMastery />
+      </Container>
+
       <Container className="border-b border-border py-6">
         <MyLast7Days />
       </Container>
 
-      <Container className="grid grid-cols-1 gap-6 border-b border-border py-6 laptop:grid-cols-3">
-        <section className="laptop:col-span-2">
-          <SkillsHeatmap />
-        </section>
-        <section className="laptop:col-span-1">
-          <TodaysDrill />
-        </section>
+      <Container className="border-b border-border py-6">
+        <SkillsHeatmap />
       </Container>
 
       {/* Flagship tools anchor strip — pulls the eye straight to the two

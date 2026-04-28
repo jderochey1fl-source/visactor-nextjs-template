@@ -1,4 +1,4 @@
-import { Clock, DollarSign, Percent, TrendingUp } from "lucide-react";
+import { Activity, Flame, Target, TrendingDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type KPI = {
@@ -10,37 +10,40 @@ type KPI = {
   accent?: "primary" | "hot" | "success";
 };
 
-// Day-1 founding-AE reality. No manufactured momentum badges.
+// Training-flavored KPIs. No CRM, no pipeline. These are the four numbers a
+// rep should see first thing every morning. STUB values — every one of these
+// goes live from Neon the moment role-plays start persisting.
 const items: KPI[] = [
   {
-    label: "Pipeline Value",
-    value: "$0",
-    subtitle: "target: $500K",
-    tag: "YEAR 1 QUOTA",
-    icon: DollarSign,
+    label: "Practice Pace",
+    value: "3 / 5",
+    subtitle: "drills this week",
+    tag: "60% OF GOAL",
+    icon: Target,
     accent: "primary",
   },
   {
-    label: "Close Rate",
-    value: "—",
-    subtitle: "baseline pending",
-    icon: Percent,
-    accent: "success",
-  },
-  {
-    label: "Avg Deal Size",
-    value: "$5,988",
-    subtitle: "annual contract value",
-    tag: "~$499/mo",
-    icon: TrendingUp,
+    label: "Mastery Score",
+    value: "64",
+    subtitle: "avg across LADDER stages",
+    tag: "OUT OF 100",
+    icon: Activity,
     accent: "hot",
   },
   {
-    label: "Cycle Time",
-    value: "45d",
-    subtitle: "target",
-    tag: "ESTIMATE",
-    icon: Clock,
+    label: "Streak",
+    value: "4d",
+    subtitle: "consecutive drill days",
+    tag: "PR: 11d",
+    icon: Flame,
+    accent: "success",
+  },
+  {
+    label: "Top Miss",
+    value: "Diagnose",
+    subtitle: "weakest LADDER stage",
+    tag: "DRILL TODAY",
+    icon: TrendingDown,
   },
 ];
 
